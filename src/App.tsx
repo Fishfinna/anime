@@ -1,23 +1,19 @@
 import { createSignal } from "solid-js";
+import { Icon } from "./components/Icon";
 import "./App.css";
 
 function App() {
-  const [count, setCount] = createSignal(0);
-
   return (
     <>
-      <h1>Simple Video</h1>
-      <div class="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count()}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p class="read-the-docs">
-        Click on the Vite and Solid logos to learn more
-      </p>
+      <Icon
+        name="emoji_food_beverage"
+        style={{ "font-size": "100px", color: "#4e4e4f" }}
+      />
+
+      <form>
+        <input placeholder="search"></input>
+        {/* <Icon name="search" style={{ "font-size": "20px", color: "#717171" }} /> */}
+      </form>
     </>
   );
 }
