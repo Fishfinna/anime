@@ -12,7 +12,7 @@ function App() {
 
       <form>
         <input placeholder="search"></input>
-        {/* <Icon name="search" style={{ "font-size": "20px", color: "#717171" }} /> */}
+        <Icon name="search" style={{ "font-size": "20px", color: "#717171" }} />
       </form>
     </>
   );
