@@ -4,10 +4,17 @@ import "./search.scss";
 export function Search() {
   return (
     <form>
-      <input placeholder="search"></input>
       <button>
-        <Icon name="search" style={{ "font-size": "20px", color: "#717171" }} />
+        <Icon
+          name="search"
+          style={{
+            "font-size": "20px",
+            color: "#4e4e4f",
+            "vertical-align": "bottom",
+          }}
+        />
       </button>
+      <input placeholder="search"></input>
     </form>
   );
 }

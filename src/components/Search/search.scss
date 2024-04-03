@@ -1,0 +1,30 @@
+button {
+    background-color: #3b3b3b;
+    border: none;
+    padding: 10px;
+    font-size: 120%;
+    border-radius: 10px 0 0 10px;
+
+    &:hover {
+        cursor: pointer;
+        filter: brightness(120%)
+    }
+}
+
+input {
+    padding: 10px 20px;
+    font-size: 120%;
+    border-radius: 0 10px 10px 0;
+    border: none;
+    color: #CCC;
+    background-color: #3b3b3b;
+
+    &:focus {
+        border: none;
+        outline: none;
+    }
+}
+
+form:hover {
+    filter: brightness(105%);
+}

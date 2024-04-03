@@ -27,14 +27,6 @@ body {
   text-align: center;
 }
 
-input {
-  padding: 10px 20px;
-  font-size: 120%;
-  border-radius: 10px;
-  border: none;
-  color: #CCC;
-}
-
 .error {
   color: #b46464;
 }
