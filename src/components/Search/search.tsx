@@ -1,7 +1,7 @@
 import { Icon } from "../Icons/icon";
 import "./search.scss";
 
-export function Search() {
+export function Search(setTitles) {
   return (
     <form>
       <button>
