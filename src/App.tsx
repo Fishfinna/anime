@@ -2,7 +2,7 @@ import { Icon } from "./components/Icons/icon";
 import { Search } from "./components/Search/search";
 import { Results } from "./components/Results/results";
 import "./App.scss";
-import { createSignal } from "solid-js";
+import { createSignal, Show } from "solid-js";
 
 export default function App() {
   const [titles, setTitles] = createSignal<string[]>([]);
@@ -14,7 +14,9 @@ export default function App() {
         style={{ "font-size": "100px", color: "#4e4e4f" }}
       />
       <Search setTitles={setTitles} />
-      <Results titles={titles()} />
+      <Show when={titles()}>
+        <Results titles={titles()} />
+      </Show>
     </>
   );
 }

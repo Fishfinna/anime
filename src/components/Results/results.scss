@@ -1,0 +1,15 @@
+.results-container {
+    background-color: #2b2b2b;
+    padding: 1px;
+    border-radius: 0 0 10px 10px;
+    position: relative;
+    padding-top: 20px;
+    top: -20px;
+    z-index: -1;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.result {
+    color: #a5a3a3;
+    padding: 5px;
+}
