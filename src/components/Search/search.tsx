@@ -33,7 +33,7 @@ export function Search() {
         <input ref={setInputRef} placeholder="search"></input>
       </form>
       <Show when={titles() && titles().length !== 0}>
-        <Results titles={titles()} />
+        <Results titles={titles} />
       </Show>
     </div>
   );

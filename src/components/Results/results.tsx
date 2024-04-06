@@ -1,10 +1,10 @@
 import { Accessor, For, Show } from "solid-js";
 import "./results.scss";
 
-export function Results({ titles }: { titles: Accessor<string[]> }) {
+export function Results(props: { titles: Accessor<string[]> }) {
   return (
     <ul class="results-container">
-      <For each={titles}>
+      <For each={props.titles()}>
         {(title, index) => (
           <li class="title">
             <button
@@ -15,7 +15,7 @@ export function Results({ titles }: { titles: Accessor<string[]> }) {
             >
               {title}
             </button>
-            <Show when={index() !== titles().length - 1}>
+            <Show when={index() !== props.titles.length - 1}>
               <div class="line" />
             </Show>
           </li>
