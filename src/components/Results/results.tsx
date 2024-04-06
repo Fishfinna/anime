@@ -1,12 +1,12 @@
-import { For, Show } from "solid-js";
+import { Accessor, For, Show } from "solid-js";
 import "./results.scss";
 
-export function Results({ titles }: { titles: string[] }) {
+export function Results({ titles }: { titles: Accessor<string[]> }) {
   return (
-    <div class="results-container">
+    <ul class="results-container">
       <For each={titles}>
-        {(title) => (
-          <div class="title">
+        {(title, index) => (
+          <li class="title">
             <button
               class="result"
               onClick={() => {
@@ -15,12 +15,12 @@ export function Results({ titles }: { titles: string[] }) {
             >
               {title}
             </button>
-            <Show when={title !== titles[titles.length - 1]}>
+            <Show when={index() !== titles().length - 1}>
               <div class="line" />
             </Show>
-          </div>
+          </li>
         )}
       </For>
-    </div>
+    </ul>
   );
 }
