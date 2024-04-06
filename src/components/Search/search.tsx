@@ -3,8 +3,8 @@ import "./search.scss";
 
 export function Search(setTitles) {
   return (
-    <form>
-      <button>
+    <form class="search">
+      <button class="search-btn">
         <Icon
           name="search"
           style={{

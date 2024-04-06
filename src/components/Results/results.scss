@@ -4,12 +4,43 @@
     border-radius: 0 0 10px 10px;
     position: relative;
     padding-top: 20px;
-    top: -20px;
-    z-index: -1;
+    top: -10px;
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    max-height: 25vh;
+    overflow-y: scroll;
 }
 
 .result {
+    background-color: transparent;
+    border: none;
+    position: relative;
     color: #a5a3a3;
-    padding: 5px;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    // text-overflow: ellipsis;
+    padding: 10px;
+
+    &:hover {
+        background-color: #2d2d2d;
+        cursor: pointer;
+    }
+
+    &:last-child {
+        border-radius: 0 0 10px 10px;
+    }
+}
+
+.line {
+    min-width: 80%;
+    min-height: 2px;
+    background-color: #2d2d2d;
+}
+
+.title {
+    width: 100%;
 }

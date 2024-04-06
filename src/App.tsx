@@ -6,7 +6,7 @@ import { createSignal, Show } from "solid-js";
 
 export default function App() {
   const [titles, setTitles] = createSignal<string[]>([]);
-  setTitles(["test", "data", "a very long title so I can see the results"]);
+  setTitles(["test", "a very  see the  sdfsdf sdfs"]);
   return (
     <>
       <Icon
@@ -14,7 +14,7 @@ export default function App() {
         style={{ "font-size": "100px", color: "#4e4e4f" }}
       />
       <Search setTitles={setTitles} />
-      <Show when={titles()}>
+      <Show when={titles() && titles().length != 0}>
         <Results titles={titles()} />
       </Show>
     </>

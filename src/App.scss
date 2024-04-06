@@ -13,6 +13,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+#root {
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  animation: all 0.5s linear;
+}
+
 body {
   margin: 0;
   display: flex;
@@ -21,16 +28,36 @@ body {
   min-height: 100vh;
 }
 
-#root {
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
 .error {
   color: #b46464;
 }
 
 form * {
   font-family: Helvetica, sa ns-serif;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  display: none;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar:hover {
+  width: 8px;
+  height: 8px;
+  display: block;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #333;
 }
