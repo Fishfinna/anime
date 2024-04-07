@@ -1,10 +1,12 @@
 import { Icon } from "./components/Icons/icon";
 import { Search } from "./components/Search/search";
 import "./App.scss";
+import { Settings } from "./components/Settings/settings";
 
 export default function App() {
   return (
     <>
+      <Settings />
       <Icon
         name="emoji_food_beverage"
         className="main-icon"
