@@ -1,0 +1,42 @@
+.toggle-container {
+    position: relative;
+    width: 60px;
+    height: 25px;
+    margin: 5px;
+    border-radius: 15px;
+    background-color: #333;
+    cursor: pointer;
+
+    input {
+        display: none;
+    }
+
+    .toggle {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 25px;
+        height: 25px;
+        border-radius: 15px;
+        background-color: #474747;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: #5c5c5c;
+        }
+    }
+
+    input:checked+.toggle {
+        transform: translateX(40px);
+    }
+
+    .option {
+        max-width: fit-content;
+        max-height: fit-content;
+        color: #757575;
+        text-align: center;
+        font-family: Helvetica, sans-serif;
+        font-size: 65%;
+        font-weight: bold;
+    }
+}
