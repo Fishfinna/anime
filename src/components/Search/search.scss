@@ -2,15 +2,23 @@
     @media (max-width: 650px) {
         transform: scale(.7)
     }
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s ease;
+    max-height: 50vh;
+    width: 300px;
 }
 
 .search-form {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+    width: 100%;
 
     input {
-        position: relative;
+        width: 100%;
         z-index: 2;
         padding: 10px 20px;
         font-size: 120%;
@@ -31,6 +39,7 @@
         background-color: #3b3b3b;
         border: none;
         padding: 10px;
+        margin-right: -1px;
         font-size: 120%;
         border-radius: 10px 0 0 10px;
 

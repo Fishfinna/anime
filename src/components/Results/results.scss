@@ -4,13 +4,15 @@
     border-radius: 0 0 10px 10px;
     z-index: 0;
     position: relative;
-    top: -20px;
+    top: -30px;
     display: flex;
     flex-direction: column;
     align-items: center;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    max-height: 25vh;
+    max-height: 45vh;
     overflow-y: scroll;
+    transition: height 0.3s ease;
+    width: 290px;
 }
 
 .result {
@@ -35,16 +37,20 @@
 }
 
 .line {
-    min-width: 80%;
-    min-height: 2px;
+    transition: opacity 0.3s ease;
+    width: 80%;
+    height: 1px;
     background-color: #2d2d2d;
 }
 
 .title {
     width: 100%;
     text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
     &:first-child button {
-        padding-top: 20px;
+        padding-top: 30px;
     }
 }

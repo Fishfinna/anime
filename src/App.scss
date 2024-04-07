@@ -14,18 +14,20 @@
 }
 
 #root {
-  margin: 0 auto;
-  padding: 2rem;
   text-align: center;
   animation: all 0.5s linear;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10vh;
+  align-items: center;
+  justify-content: start;
+  min-height: 100vh;
 }
 
 body {
-  margin: 0;
+  min-height: 80vh;
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  place-content: center;
 }
 
 .error {
@@ -33,7 +35,7 @@ body {
 }
 
 form * {
-  font-family: Helvetica, sa ns-serif;
+  font-family: Helvetica, sans-serif;
 }
 
 ::-webkit-scrollbar {
@@ -48,7 +50,7 @@ form * {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
+  background-color: #4e4e4f;
   border-radius: 8px;
 }
 
@@ -60,4 +62,72 @@ form * {
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: #333;
+}
+
+.loader {
+  margin: 25px;
+  min-width: 50px;
+  min-height: 28px;
+  --_g: no-repeat radial-gradient(farthest-side, #4e4e4f 94%, #0000);
+  background:
+    var(--_g) 50% 0,
+    var(--_g) 100% 0;
+  background-size: 12px 12px;
+  position: relative;
+  animation: l23-0 1.5s linear infinite;
+
+  &:before {
+    content: "";
+    position: absolute;
+    height: 12px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #4e4e4f;
+    left: 0;
+    top: 0;
+    animation:
+      l23-1 1.5s linear infinite,
+      l23-2 0.5s cubic-bezier(0, 200, .8, 200) infinite;
+  }
+}
+
+@keyframes l23-0 {
+
+  0%,
+  31% {
+    background-position: 50% 0, 100% 0
+  }
+
+  33% {
+    background-position: 50% 100%, 100% 0
+  }
+
+  43%,
+  64% {
+    background-position: 50% 0, 100% 0
+  }
+
+  66% {
+    background-position: 50% 0, 100% 100%
+  }
+
+  79% {
+    background-position: 50% 0, 100% 0
+  }
+
+  100% {
+    transform: translateX(calc(-100%/3))
+  }
+}
+
+@keyframes l23-1 {
+  100% {
+    left: calc(100% + 7px)
+  }
+}
+
+@keyframes l23-2 {
+  100% {
+    top: -0.1px
+  }
 }

@@ -7,6 +7,7 @@ export default function App() {
     <>
       <Icon
         name="emoji_food_beverage"
+        className="main-icon"
         style={{ "font-size": "100px", color: "#4e4e4f" }}
       />
       <Search />
