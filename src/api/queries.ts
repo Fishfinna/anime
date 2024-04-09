@@ -28,7 +28,7 @@ export const titlesQuery = {
     
     variables: (query: string) => {return {
       search: { allowAdult: false, allowUnknown: false, query},
-      limit: 12,
+      limit: 5,
       page: 1,
       translationType: "sub",
       countryOrigin: "ALL",

@@ -2,10 +2,11 @@ import { Icon } from "./components/Icons/icon";
 import { Search } from "./components/Search/search";
 import "./App.scss";
 import { Settings } from "./components/Settings/settings";
+import { SettingsProvider } from "./context/settingsContext";
 
 export default function App() {
   return (
-    <>
+    <SettingsProvider>
       <Settings />
       <Icon
         name="emoji_food_beverage"
@@ -13,6 +14,6 @@ export default function App() {
         style={{ "font-size": "100px", color: "#4e4e4f" }}
       />
       <Search />
-    </>
+    </SettingsProvider>
   );
 }

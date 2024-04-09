@@ -1,4 +1,8 @@
 .results-container {
+    @media (max-width: 650px) {
+        width: 65%;
+    }
+
     background-color: #2b2b2b;
     padding: 1px;
     border-radius: 0 0 10px 10px;
@@ -12,7 +16,9 @@
     max-height: 45vh;
     overflow-y: scroll;
     transition: height 0.3s ease;
-    width: 290px;
+    transition: all 0.3s ease;
+    max-height: 50vh;
+    max-width: 290px;
 }
 
 .result {
@@ -33,6 +39,10 @@
 
     &:last-child {
         border-radius: 0 0 10px 10px;
+    }
+
+    @media (max-width: 650px) {
+        font-size: 10px;
     }
 }
 

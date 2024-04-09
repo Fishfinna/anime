@@ -1,15 +1,15 @@
 import { Icon } from "../Icons/icon";
-import { Show, createSignal } from "solid-js";
+import { Show, createSignal, useContext } from "solid-js";
 import { createEffect } from "solid-js";
 import "./settings.scss";
 import { Toggle } from "../Toggle/toggle";
+import { SettingsContext } from "../../context/settingsContext";
 
 export function Settings() {
   const [menuVisible, setMenuVisible] = createSignal(false);
   const [isClicked, setIsClicked] = createSignal(false);
-  const [isSub, setIsSub] = createSignal(false);
+  const { isSub, setSub } = useContext<any>(SettingsContext);
   const translationOptions = ["dub", "sub"];
-
   function handleButtonClick() {
     setMenuVisible(!menuVisible());
     setIsClicked(true);
@@ -33,8 +33,8 @@ export function Settings() {
         <div classList={{ menu: true, fade: isClicked() }}>
           <Toggle
             options={translationOptions}
-            isChecked={isSub}
-            setChecked={setIsSub}
+            state={isSub}
+            setState={setSub}
           />
         </div>
       </Show>

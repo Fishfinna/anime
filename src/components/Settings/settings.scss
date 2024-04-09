@@ -1,5 +1,5 @@
 .settings-container {
-    position: absolute;
+    position: fixed;
     top: 5px;
     right: 5px;
     display: inline-block;
@@ -56,16 +56,10 @@
     @keyframes fade {
         0% {
             opacity: 0;
-            transform: translateY(0);
-        }
-
-        50% {
-            transform: translateY(5px);
         }
 
         100% {
             opacity: 1;
-            transform: translateY(0);
         }
     }
 }
