@@ -20,7 +20,7 @@ export function Toggle(props: {
       />
       <div class="toggle">
         <span class="option">
-          {props.state() ? props.options![0] : props.options![1]}
+          {props.state() ? props.options![1] : props.options![0]}
         </span>
       </div>
     </label>

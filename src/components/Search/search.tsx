@@ -1,7 +1,8 @@
 import { Icon } from "../Icons/icon";
 import { Results } from "../Results/results";
-import { createSignal, onCleanup, Show } from "solid-js";
+import { createSignal, onCleanup, Show, useContext } from "solid-js";
 import { client, titlesQuery } from "../../api";
+import { SettingsContext } from "../../context/settingsContext";
 
 import "./search.scss";
 
@@ -22,17 +23,17 @@ export function Search() {
   const [isLoading, setIsLoading] = createSignal<boolean>(false);
   const [error, setError] = createSignal<string | null>(null);
   const [data, setData] = createSignal<Show[] | null>(null);
+  const { isSub } = useContext<any>(SettingsContext);
   let debounceTimeout: number | undefined;
 
   async function submitSearch(event: Event) {
     event.preventDefault();
     setTitles([]);
+    setData(null);
     if (inputRef() && inputRef()!.value.trim() !== "") {
       const searchText = inputRef()!.value;
       setIsLoading(true);
-      const query = titlesQuery.query;
-      const variables = titlesQuery.variables(searchText);
-
+      const { query, variables } = titlesQuery(searchText, isSub());
       try {
         const { data: response } = await client
           .query(query, variables)
@@ -59,7 +60,7 @@ export function Search() {
     }
     debounceTimeout = setTimeout(() => {
       submitSearch(new Event("input"));
-    }, 500);
+    }, 600);
   }
 
   onCleanup(() => {
@@ -68,9 +69,17 @@ export function Search() {
 
   return (
     <>
-      <div class="search">
+      <div
+        class="search"
+        classList={{ standby: data() != null, active: data() == null }}
+      >
+        <Icon
+          name="emoji_food_beverage"
+          className="main-icon"
+          style={{ "font-size": "100px", color: "#4e4e4f" }}
+        />
         <form class="search-form" onSubmit={submitSearch}>
-          <button type="submit" class="search-btn">
+          <button type="submit" class="search-btn" onClick={handleInputChange}>
             <Icon
               name="search"
               style={{
@@ -86,14 +95,15 @@ export function Search() {
             placeholder="search"
           ></input>
         </form>
+        <Results titles={titles} />
       </div>
-      <Results titles={titles} />
       <Show when={isLoading()}>
         <div class="loader"></div>
       </Show>
       <Show when={error()}>
         <div class="error">{error()}</div>
       </Show>
+      {/* <div>{`${JSON.stringify(data())}`}</div> */}
     </>
   );
 }

@@ -1,6 +1,6 @@
 .search {
     @media (max-width: 650px) {
-        transform: scale(.7)
+        transform: scale(.8)
     }
 
     display: flex;
@@ -10,6 +10,7 @@
     max-height: 50vh;
     width: 300px;
     z-index: 2;
+    align-items: center;
 }
 
 .search-form {
@@ -49,4 +50,12 @@
             filter: brightness(120%)
         }
     }
+}
+
+.active {
+    margin-top: 20vh;
+}
+
+.standby {
+    margin-top: 10vh;
 }

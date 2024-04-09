@@ -1,4 +1,5 @@
 import { createMemo } from "solid-js";
+import "./icon.scss";
 
 interface IconProps {
   name: string;
@@ -7,12 +8,7 @@ interface IconProps {
   className?: string;
 }
 
-export function Icon({
-  name,
-  size = 50,
-  style = {},
-  className = "",
-}: IconProps) {
+export function Icon({ name, style = {}, className = "" }: IconProps) {
   const iconElement = createMemo(() => (
     <i class={`material-icons ${className}`} style={{ ...style }}>
       {name}
