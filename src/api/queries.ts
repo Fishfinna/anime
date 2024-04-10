@@ -23,6 +23,7 @@ export function titlesQuery(query: string, isSub: boolean = false) {
             _id
             name
             availableEpisodes
+            thumbnail
             __typename
         }
         }
@@ -30,7 +31,7 @@ export function titlesQuery(query: string, isSub: boolean = false) {
     `,    
     variables:  {
         search: { allowAdult: false, allowUnknown: false, query},
-        limit: 5,
+        limit: 4,
         page: 1,
         translationType: lang,
         countryOrigin: "ALL",

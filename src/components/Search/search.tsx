@@ -1,35 +1,23 @@
 import { Icon } from "../Icons/icon";
 import { Results } from "../Results/results";
-import { createSignal, onCleanup, Show, useContext } from "solid-js";
+import { createSignal, onCleanup, useContext, Show } from "solid-js";
 import { client, titlesQuery } from "../../api";
 import { SettingsContext } from "../../context/settingsContext";
+import { Titles } from "../../types/titles";
 
 import "./search.scss";
 
-interface Show {
-  _id: string;
-  name: string;
-  availableEpisodes: {
-    sub: number;
-    dub: number;
-    raw: number;
-  };
-  __typename: string;
-}
-
 export function Search() {
-  const [titles, setTitles] = createSignal<string[]>([]);
+  const [titles, setTitles] = createSignal<Titles[]>([]);
   const [inputRef, setInputRef] = createSignal<HTMLInputElement | null>(null);
   const [isLoading, setIsLoading] = createSignal<boolean>(false);
   const [error, setError] = createSignal<string | null>(null);
-  const [data, setData] = createSignal<Show[] | null>(null);
   const { isSub } = useContext<any>(SettingsContext);
   let debounceTimeout: number | undefined;
 
   async function submitSearch(event: Event) {
     event.preventDefault();
     setTitles([]);
-    setData(null);
     if (inputRef() && inputRef()!.value.trim() !== "") {
       const searchText = inputRef()!.value;
       setIsLoading(true);
@@ -42,10 +30,8 @@ export function Search() {
         if (response.shows.edges.length === 0) {
           throw new Error("No search results.");
         }
-
-        setData(response.shows.edges);
+        setTitles(response.shows.edges);
         setError(null);
-        if (data) setTitles(data()!.map((x: Show) => x.name));
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -71,7 +57,10 @@ export function Search() {
     <>
       <div
         class="search"
-        classList={{ standby: data() != null, active: data() == null }}
+        classList={{
+          standby: !!titles().length || isLoading(),
+          active: !titles().length || !isLoading(),
+        }}
       >
         <Icon
           name="emoji_food_beverage"
@@ -95,15 +84,14 @@ export function Search() {
             placeholder="search"
           ></input>
         </form>
-        <Results titles={titles} />
       </div>
+      <Results titles={titles} />
       <Show when={isLoading()}>
         <div class="loader"></div>
       </Show>
       <Show when={error()}>
         <div class="error">{error()}</div>
       </Show>
-      {/* <div>{`${JSON.stringify(data())}`}</div> */}
     </>
   );
 }
