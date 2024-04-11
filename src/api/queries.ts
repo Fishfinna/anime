@@ -1,22 +1,18 @@
 import { gql } from '@urql/core';
 
-export function titlesQuery(query: string, isSub: boolean = false) {
-    const lang = isSub ? "sub" : "dub";
-    
+export function titlesQuery(query: string) {
     return ({
     query: gql`
     query SearchAnime(
         $search: SearchInput
         $limit: Int
         $page: Int
-        $translationType: VaildTranslationTypeEnumType
         $countryOrigin: VaildCountryOriginEnumType
     ) {
         shows(
         search: $search
         limit: $limit
         page: $page
-        translationType: $translationType
         countryOrigin: $countryOrigin
         ) {
         edges {
@@ -33,7 +29,6 @@ export function titlesQuery(query: string, isSub: boolean = false) {
         search: { allowAdult: false, allowUnknown: false, query},
         limit: 4,
         page: 1,
-        translationType: lang,
         countryOrigin: "ALL",
     }
     });

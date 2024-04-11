@@ -3,25 +3,24 @@ import { Results } from "../Results/results";
 import { createSignal, onCleanup, useContext, Show } from "solid-js";
 import { client, titlesQuery } from "../../api";
 import { SettingsContext } from "../../context/settingsContext";
-import { Titles } from "../../types/titles";
 
 import "./search.scss";
 
 export function Search() {
-  const [titles, setTitles] = createSignal<Titles[]>([]);
   const [inputRef, setInputRef] = createSignal<HTMLInputElement | null>(null);
   const [isLoading, setIsLoading] = createSignal<boolean>(false);
   const [error, setError] = createSignal<string | null>(null);
-  const { isSub } = useContext<any>(SettingsContext);
+  const [isActive, setIsActive] = createSignal<boolean>(false);
+  const { selectMode, setSelectMode, titles, setTitles } =
+    useContext(SettingsContext);
   let debounceTimeout: number | undefined;
 
   async function submitSearch(event: Event) {
     event.preventDefault();
-    setTitles([]);
     if (inputRef() && inputRef()!.value.trim() !== "") {
       const searchText = inputRef()!.value;
       setIsLoading(true);
-      const { query, variables } = titlesQuery(searchText, isSub());
+      const { query, variables } = titlesQuery(searchText);
       try {
         const { data: response } = await client
           .query(query, variables)
@@ -37,6 +36,9 @@ export function Search() {
       } finally {
         setIsLoading(false);
       }
+    } else {
+      setTitles([]);
+      setError(null);
     }
   }
 
@@ -45,10 +47,10 @@ export function Search() {
       clearTimeout(debounceTimeout);
     }
     debounceTimeout = setTimeout(() => {
+      setSelectMode(true);
       submitSearch(new Event("input"));
     }, 600);
   }
-
   onCleanup(() => {
     setInputRef(null);
   });
@@ -58,8 +60,8 @@ export function Search() {
       <div
         class="search"
         classList={{
-          standby: !!titles().length || isLoading(),
-          active: !titles().length || !isLoading(),
+          standby: !isActive(),
+          active: isActive(),
         }}
       >
         <Icon
@@ -82,16 +84,18 @@ export function Search() {
             ref={setInputRef}
             onInput={handleInputChange}
             placeholder="search"
+            onFocus={() => setIsActive(true)}
+            onBlur={() => setIsActive(!!titles().length)}
           ></input>
         </form>
       </div>
-      <Results titles={titles} />
-      <Show when={isLoading()}>
-        <div class="loader"></div>
-      </Show>
       <Show when={error()}>
         <div class="error">{error()}</div>
       </Show>
+      <Show when={isLoading()}>
+        <div class="loader"></div>
+      </Show>
+      <Results titles={titles} />
     </>
   );
 }

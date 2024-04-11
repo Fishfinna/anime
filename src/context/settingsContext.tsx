@@ -1,12 +1,17 @@
-import { createContext, createSignal } from "solid-js";
+import { Context, createContext, createSignal } from "solid-js";
+import { Titles } from "../types/titles";
+import { Settings } from "../types/settings";
 
-export const SettingsContext = createContext();
+export const SettingsContext = createContext<Settings>() as Context<Settings>;
 
 export function SettingsProvider(props: { children: any }) {
-  const [isSub, setSub] = createSignal(false);
+  const [selectMode, setSelectMode] = createSignal<boolean>(true);
+  const [titles, setTitles] = createSignal<Titles[]>([]);
 
   return (
-    <SettingsContext.Provider value={{ isSub, setSub }}>
+    <SettingsContext.Provider
+      value={{ selectMode, setSelectMode, titles, setTitles }}
+    >
       {props.children}
     </SettingsContext.Provider>
   );

@@ -1,12 +1,12 @@
 .standby .main-icon {
     height: auto;
     opacity: 1;
-    height: 0;
-    opacity: 0;
+    transition: height 0.5s ease-in-out, opacity 0.5s ease-in-out;
 }
 
 .active .main-icon {
     height: auto;
     opacity: 1;
-    transition: height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    height: 0;
+    opacity: 0;
 }
