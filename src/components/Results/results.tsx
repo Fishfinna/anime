@@ -1,21 +1,22 @@
-import { Accessor, For, Show, createSignal } from "solid-js";
-import { Titles } from "../../types/titles";
+import { For, Show, useContext } from "solid-js";
+import { SettingsContext } from "../../context/settingsContext";
+import { Mode } from "../../types/settings";
 
 import "./results.scss";
 
-export function Results(props: { titles: Accessor<Titles[]> }) {
-  const [selectMode, setSelectMode] = createSignal<boolean>(true);
+export function Results() {
+  const { mode, setMode, titles } = useContext(SettingsContext);
 
   return (
-    <Show when={props.titles() && props.titles().length !== 0 && selectMode()}>
+    <Show when={titles() && titles().length !== 0 && mode() == Mode.title}>
       <div class="results-container">
-        <For each={props.titles()}>
+        <For each={titles()}>
           {(title) => (
             <div
               class="title"
               onClick={() => {
                 console.log(title);
-                setSelectMode(false);
+                setMode(Mode.episode);
               }}
             >
               <img src={title.thumbnail} />

@@ -11,7 +11,7 @@ export function Toggle(props: {
   };
 
   return (
-    <label class="toggle-container">
+    <label class="toggle-container" for="toggle">
       <input
         type="checkbox"
         checked={props.state()}
@@ -20,7 +20,7 @@ export function Toggle(props: {
       />
       <div class="toggle">
         <span class="option">
-          {props.state() ? props.options![1] : props.options![0]}
+          {props.state() ? props.options[1] : props.options[0]}
         </span>
       </div>
     </label>
