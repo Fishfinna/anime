@@ -1,13 +1,13 @@
 import { Accessor } from "solid-js";
-import {Titles} from "./titles";
+import {Title} from "./titles";
 
 export interface Settings { 
     mode: Accessor<Mode>, 
     setMode: (arg: Mode) => void,
-    titles: Accessor<Titles[]>, 
-    setTitles: (arg: Titles[]) => void,
-    episodes: Accessor<any>,
-    setEpisodes: (arg: any) => void
+    titles: Accessor<Title[]>, 
+    setTitles: (arg: Title[]) => void,
+    currentTitle: Accessor<Title | undefined>,
+    setCurrentTitle: (arg: Title) => void
 }
 
 export enum Mode {

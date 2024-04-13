@@ -1,11 +1,20 @@
-export interface Titles {
-  _id: string;
-  name: string;
-  availableEpisodes: {
+export interface EpisodeDetail {
+    sub: string[];
+    dub: string[];
+    raw: string[];
+}
+
+export interface LastEpisodeTimestamp {
     sub: number;
     dub: number;
     raw: number;
-  };
-  thumbnail: string;
-  __typename: string;
+}
+
+export interface Title {
+    _id: string;
+    name: string;
+    thumbnail: string;
+    __typename: string;
+    availableEpisodesDetail: EpisodeDetail;
+    lastEpisodeTimestamp: LastEpisodeTimestamp;
 }

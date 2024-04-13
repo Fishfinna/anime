@@ -18,10 +18,11 @@ export function titlesQuery(query: string) {
         edges {
             _id
             name
-            availableEpisodes
             thumbnail
             __typename
-        }
+            availableEpisodesDetail
+            lastEpisodeTimestamp
+            }
         }
     }
     `,    
