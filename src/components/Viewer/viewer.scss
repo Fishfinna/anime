@@ -1,0 +1,33 @@
+.last-modified {
+    color: #5b5b5b
+}
+
+.episode-list {
+    list-style: none;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.episode-list li {
+    padding: 15px;
+    width: 20px;
+    color: white;
+    margin-bottom: 5px;
+    background-color: #292929;
+    border-radius: 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.episode-list li:hover {
+    background-color: #444;
+}
+
+.episode-title {
+    color: #858585;
+    padding: none;
+    margin-bottom: -15px;
+}
