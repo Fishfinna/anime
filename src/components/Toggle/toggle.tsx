@@ -19,8 +19,11 @@ export function Toggle(props: {
         id="toggle"
       />
       <div class="toggle">
-        <span class="option">
-          {props.state() ? props.options[1] : props.options[0]}
+        <span class={"option" + (props.state() ? "" : " inactive")}>
+          {props.options[1]}
+        </span>
+        <span class={"option" + (props.state() ? " inactive" : "")}>
+          {props.options[0]}
         </span>
       </div>
     </label>

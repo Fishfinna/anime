@@ -20,10 +20,8 @@
         border-radius: 15px;
         background-color: #656565;
         transition: transform 0.3s ease, background-color 0.3s ease;
-
-        &:hover {
-            background-color: #787878;
-        }
+        display: flex;
+        flex-direction: row;
     }
 
     .option {
@@ -35,14 +33,59 @@
         text-align: center;
         font-family: Helvetica, sans-serif;
         font-weight: bold;
+        transition: color 0.3s ease;
+
+        &:hover {
+            color: rgb(255, 255, 255);
+        }
+
+        &.inactive {
+            color: rgb(87, 87, 87);
+            transform: translate(-50%, -50%) translateX(150px);
+            transition: color 0.5s ease;
+            animation: fadeIn 0.35s forwards;
+
+            &:hover {
+                color: rgb(133, 133, 133);
+            }
+        }
     }
 
     input:checked+.toggle {
-        background-color: #2b2b2b;
-        transform: translateX(150px);
+        background-color: #222222;
+        transform: translateX(151px);
+    }
 
-        .option {
-            color: #a2a2a2;
+    input:checked+.toggle .option {
+        color: #a2a2a2;
+
+        &:hover {
+            color: #ffffff;
         }
+    }
+
+    input:checked+.toggle .inactive {
+        color: rgb(87, 87, 87);
+        transform: translate(-50%, -50%) translateX(-150px);
+        transition: color 0.5s ease;
+        animation: fadeIn 0.35s forwards;
+
+        &:hover {
+            color: rgb(133, 133, 133);
+        }
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
     }
 }

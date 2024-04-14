@@ -16,7 +16,6 @@ export function Results() {
             <div
               class="title"
               onClick={() => {
-                console.log(title);
                 setCurrentTitle(title);
                 setMode(Mode.episode);
               }}
