@@ -5,23 +5,12 @@ import { Toggle } from "../Toggle/toggle";
 import { EpisodeVariables, client, episodeQuery } from "../../api";
 import "./viewer.scss";
 
-function convertUrlsToProperLinks(data: {
-  episode: { sourceUrls: { sourceUrl: string }[] };
-}): string[] {
+function convertUrlsToProperLinks(sourceUrls: string[]) {
   const base_url = "https://allanime.day/";
-  const sourceUrls = data.episode.sourceUrls;
-  const properLinks: string[] = [];
-
-  sourceUrls.forEach((urlObj) => {
-    const sourceUrl = urlObj.sourceUrl;
-    if (sourceUrl.startsWith("--")) {
-      const extractedUrl = sourceUrl.substring(2);
-      const properLink = base_url + extractedUrl;
-      properLinks.push(properLink);
-    }
-  });
-
-  return properLinks;
+  console.log(sourceUrls);
+  sourceUrls.map((url) => url.replace(/\\u002F/g, "/").replace(/\\\\/g, ""));
+  console.log(sourceUrls);
+  return sourceUrls;
 }
 
 export function Viewer() {
@@ -91,7 +80,7 @@ export function Viewer() {
         setIsLoading(true);
         const { query, variables } = episodeQuery(selectedInfo);
         const { data } = await client.query(query, variables).toPromise();
-        const properUrls = convertUrlsToProperLinks(data);
+        const properUrls = convertUrlsToProperLinks(data.episode.sourceUrls);
         setUrls(properUrls);
         setError("");
       } catch (err: any) {
