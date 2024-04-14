@@ -25,6 +25,7 @@ export function Search() {
         const { data: response } = await client
           .query(query, variables)
           .toPromise();
+        console.log({ response });
 
         if (response.shows.edges.length === 0) {
           throw new Error("No search results.");

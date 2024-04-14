@@ -1,5 +1,11 @@
 import { gql } from '@urql/core';
 
+export interface EpisodeVariables {
+    showId: string, 
+    episodeString: string, 
+    translationType: string
+}
+
 export function titlesQuery(query: string) {
     return ({
     query: gql`
@@ -33,4 +39,23 @@ export function titlesQuery(query: string) {
         countryOrigin: "ALL",
     }
     });
+}
+
+export function episodeQuery(episodeVariables: EpisodeVariables) {
+    return ({
+        query: gql`
+        query GetEpisodeLinks(
+            $showId: String!, 
+            $translationType: VaildTranslationTypeEnumType!, 
+            $episodeString: String!
+        ) {
+        episode(
+            showId: $showId, 
+            translationType: $translationType, 
+            episodeString: $episodeString) {
+                sourceUrls
+            }
+        }`,
+        variables: episodeVariables
+    })
 }
