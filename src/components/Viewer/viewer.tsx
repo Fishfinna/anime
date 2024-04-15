@@ -5,12 +5,16 @@ import { Toggle } from "../Toggle/toggle";
 import { EpisodeVariables, client, episodeQuery } from "../../api";
 import "./viewer.scss";
 
-function convertUrlsToProperLinks(sourceUrls: string[]) {
-  const base_url = "https://allanime.day/";
-  console.log(sourceUrls);
-  sourceUrls.map((url) => url.replace(/\\u002F/g, "/").replace(/\\\\/g, ""));
-  console.log(sourceUrls);
-  return sourceUrls;
+function convertUrlsToProperLinks(sourceUrls: SourceUrl[]) {
+  return sourceUrls.map(({ sourceUrl }) => {
+    const bytes: number[] = [];
+    for (let i = 0; i < sourceUrl.length; i += 2) {
+      bytes.push(parseInt(sourceUrl.substring(i, i + 2), 16));
+    }
+    const decodedUrl = String.fromCharCode(...bytes);
+    console.log({ decodedUrl, sourceUrl });
+    return decodedUrl;
+  });
 }
 
 export function Viewer() {
@@ -66,7 +70,7 @@ export function Viewer() {
 
   // request for episode sources
   createEffect(async () => {
-    console.log("trigger");
+    console.log("trigger episode request");
     const episodes = currentTitle()!?.availableEpisodesDetail[lang()].sort(
       (a: any, b: any) => a - b
     );
