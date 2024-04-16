@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 
 function decode(encoding: string): string {
     const result = encoding.replace(/../g, '$&\n')
