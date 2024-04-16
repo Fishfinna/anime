@@ -35,6 +35,7 @@ export function Viewer() {
       day: "numeric",
       hour: "numeric",
       minute: "numeric",
+      year: "numeric",
     });
 
     setLastModified(formattedDate);
@@ -43,7 +44,6 @@ export function Viewer() {
 
   // handle the episode number
   createEffect(() => {
-    console.log("switched to mode:", lang());
     const episodes = currentTitle()!?.availableEpisodesDetail[lang()].sort(
       (a: any, b: any) => a - b
     );
@@ -59,7 +59,6 @@ export function Viewer() {
 
   // request for episode sources
   createEffect(async () => {
-    console.log("trigger episode request");
     const episodes = currentTitle()!?.availableEpisodesDetail[lang()].sort(
       (a: any, b: any) => a - b
     );
