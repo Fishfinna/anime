@@ -4,18 +4,7 @@ import { SettingsContext } from "../../context/settingsContext";
 import { Toggle } from "../Toggle/toggle";
 import { EpisodeVariables, client, episodeQuery } from "../../api";
 import "./viewer.scss";
-
-function convertUrlsToProperLinks(sourceUrls: SourceUrl[]) {
-  return sourceUrls.map(({ sourceUrl }) => {
-    const bytes: number[] = [];
-    for (let i = 0; i < sourceUrl.length; i += 2) {
-      bytes.push(parseInt(sourceUrl.substring(i, i + 2), 16));
-    }
-    const decodedUrl = String.fromCharCode(...bytes);
-    console.log({ decodedUrl, sourceUrl });
-    return decodedUrl;
-  });
-}
+import { convertUrlsToProperLinks } from "../../api/decodeUrl";
 
 export function Viewer() {
   const { mode, currentTitle, setMode } = useContext(SettingsContext);
@@ -84,7 +73,9 @@ export function Viewer() {
         setIsLoading(true);
         const { query, variables } = episodeQuery(selectedInfo);
         const { data } = await client.query(query, variables).toPromise();
-        const properUrls = convertUrlsToProperLinks(data.episode.sourceUrls);
+        const properUrls = await convertUrlsToProperLinks(
+          data.episode.sourceUrls
+        );
         setUrls(properUrls);
         setError("");
       } catch (err: any) {
@@ -97,15 +88,24 @@ export function Viewer() {
 
   return (
     <Show when={mode() === Mode.episode}>
+      <h1 class="show-title">{currentTitle()?.name}</h1>
       <Show when={error()}>
         <div class="error">{error()}</div>
       </Show>
-      <Show when={!isLoading()} fallback={<div class="loader"></div>}>
-        <video controls>
-          <For each={urls()}>{(url) => <source src={url} />}</For>
-          Your browser does not support the video tag.
-        </video>
-      </Show>
+      <div class="video-container">
+        <Show when={!isLoading()} fallback={<div class="loader"></div>}>
+          <video
+            width="640"
+            height="360"
+            class="video-display"
+            controls
+            poster={currentTitle()?.thumbnail}
+          >
+            <For each={urls()}>{(url) => <source src={url} />}</For>
+            Your browser does not support the video tag.
+          </video>
+        </Show>
+      </div>
 
       <h2 class="episode-header">Episodes</h2>
       <Toggle options={["sub", "dub"]} state={isDub} setState={setIsDub} />
@@ -131,7 +131,9 @@ export function Viewer() {
         </Show>
       </ul>
       <Show when={currentTitle()?.lastEpisodeTimestamp[lang()]}>
-        <p class="last-modified">Last episode posted on {lastModified()}</p>
+        <p class="last-modified">
+          Last episode posted on <br /> {lastModified()}
+        </p>
       </Show>
     </Show>
   );
