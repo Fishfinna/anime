@@ -5,6 +5,7 @@ import { Toggle } from "../Toggle/toggle";
 import { EpisodeVariables, client, episodeQuery } from "../../api";
 import "./viewer.scss";
 import { convertUrlsToProperLinks } from "../../api/decodeUrl";
+import { Icon } from "../Icons/icon";
 
 export function Viewer() {
   const { mode, currentTitle, setMode } = useContext(SettingsContext);
@@ -87,6 +88,7 @@ export function Viewer() {
 
   return (
     <Show when={mode() === Mode.episode}>
+      <Icon name="back_arrow" />
       <h1 class="show-title">{currentTitle()?.name}</h1>
       <Show when={error()}>
         <div class="error">{error()}</div>
