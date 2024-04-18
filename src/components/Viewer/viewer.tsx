@@ -88,7 +88,6 @@ export function Viewer() {
 
   return (
     <Show when={mode() === Mode.episode}>
-      <Icon name="back_arrow" />
       <h1 class="show-title">{currentTitle()?.name}</h1>
       <Show when={error()}>
         <div class="error">{error()}</div>
