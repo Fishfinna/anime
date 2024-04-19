@@ -69,6 +69,7 @@ export function Search() {
         className="main-icon"
         style={{ "font-size": "100px", color: "#4e4e4f" }}
       />
+
       <form class="search-form" onSubmit={submitSearch}>
         <button type="submit" class="search-btn" onClick={handleInputChange}>
           <Icon
@@ -88,6 +89,7 @@ export function Search() {
           onBlur={() => setIsActive(!!titles().length)}
         ></input>
       </form>
+
       <Show when={error()}>
         <div class="error">{error()}</div>
       </Show>

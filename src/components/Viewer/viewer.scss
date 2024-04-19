@@ -53,6 +53,13 @@ div.video-container {
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 360px;
+
+    @media (max-width: 500px) {
+        min-height: 0;
+        height: auto;
+    }
+
 
     video.video-display {
         object-fit: cover;
