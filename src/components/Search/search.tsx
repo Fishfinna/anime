@@ -85,7 +85,10 @@ export function Search() {
           ref={setInputRef}
           onInput={handleInputChange}
           placeholder="search"
-          onFocus={() => setIsActive(true)}
+          onFocus={() => {
+            setIsActive(true);
+            window.scrollTo(0, 0);
+          }}
           onBlur={() => setIsActive(!!titles().length)}
         ></input>
       </form>
