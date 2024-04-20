@@ -26,10 +26,8 @@ export function SettingsProvider(props: { children: any }) {
 
   createEffect(() => {
     const savedSettings = localStorage.getItem("settings");
-    console.log(savedSettings);
     if (savedSettings) {
       const parsedSettings = JSON.parse(savedSettings);
-      console.log(parsedSettings);
       setMode(parsedSettings.mode);
       setTitles(parsedSettings.titles);
       setCurrentTitle(parsedSettings.currentTitle);
