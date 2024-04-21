@@ -11,7 +11,8 @@ export function Search() {
   const [isLoading, setIsLoading] = createSignal<boolean>(false);
   const [error, setError] = createSignal<string | null>(null);
   const [isActive, setIsActive] = createSignal<boolean>(false);
-  const { mode, setMode, titles, setTitles } = useContext(SettingsContext);
+  const { mode, setMode, titles, setTitles, currentTitle, setCurrentTitle } =
+    useContext(SettingsContext);
   let debounceTimeout: number | undefined;
 
   async function submitSearch(event: Event) {
@@ -30,6 +31,7 @@ export function Search() {
           throw new Error("No search results.");
         }
         setTitles(response.shows.edges);
+        setCurrentTitle(undefined);
         setMode(Mode.title);
         setError(null);
       } catch (err: any) {
@@ -67,6 +69,10 @@ export function Search() {
       <Icon
         name="emoji_food_beverage"
         className="main-icon"
+        onClick={() => {
+          setMode(Mode.none);
+          setIsActive(false);
+        }}
         style={{ "font-size": "100px", color: "#4e4e4f" }}
       />
 
@@ -86,6 +92,7 @@ export function Search() {
           onInput={handleInputChange}
           placeholder="search"
           onFocus={() => {
+            setMode(!currentTitle() ? Mode.title : Mode.episode);
             setIsActive(true);
             window.scrollTo(0, 0);
           }}

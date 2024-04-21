@@ -2,6 +2,7 @@
   font-family: Helvetica, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  min-height: 100%;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -11,6 +12,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
 }
 
 #root {
@@ -20,12 +22,18 @@
   flex-direction: column;
   align-items: center;
   justify-content: start;
+  min-height: 100%;
+}
+
+html {
+  min-height: 100%;
 }
 
 body {
-  min-height: 80vh;
   display: flex;
   place-content: center;
+  min-height: 100vh;
+  margin: 0;
 }
 
 .error {

@@ -5,7 +5,6 @@ import { Toggle } from "../Toggle/toggle";
 import { EpisodeVariables, client, episodeQuery } from "../../api";
 import "./viewer.scss";
 import { convertUrlsToProperLinks } from "../../api/decodeUrl";
-import { Icon } from "../Icons/icon";
 
 export function Viewer() {
   const { mode, currentTitle, setMode } = useContext(SettingsContext);
@@ -88,53 +87,57 @@ export function Viewer() {
 
   return (
     <Show when={mode() === Mode.episode}>
-      <h1 class="show-title">{currentTitle()?.name}</h1>
-      <Show when={error()}>
-        <div class="error">{error()}</div>
-      </Show>
-      <div class="video-container">
-        <Show when={!isLoading()} fallback={<div class="loader"></div>}>
-          <video
-            width="640"
-            height="360"
-            class="video-display"
-            controls
-            poster={currentTitle()?.thumbnail}
-          >
-            <For each={urls()}>{(url) => <source src={url} />}</For>
-            Your browser does not support the video tag.
-          </video>
+      <div class="viewer-container">
+        <div class="controls">
+          <h1 class="show-title">{currentTitle()?.name}</h1>
+          <Show when={error()}>
+            <div class="error">{error()}</div>
+          </Show>
+          <div class="video-container">
+            <Show when={!isLoading()} fallback={<div class="loader"></div>}>
+              <video
+                width="640"
+                height="360"
+                class="video-display"
+                controls
+                poster={currentTitle()?.thumbnail}
+              >
+                <For each={urls()}>{(url) => <source src={url} />}</For>
+                Your browser does not support the video tag.
+              </video>
+            </Show>
+          </div>
+
+          <h2 class="episode-header">Episodes</h2>
+          <Toggle options={["sub", "dub"]} state={isDub} setState={setIsDub} />
+          <ul class="episode-list">
+            <Show
+              when={currentTitle()?.availableEpisodesDetail[lang()].length != 0}
+              fallback={<p class="error">nothing :{"("}</p>}
+            >
+              <For
+                each={currentTitle()?.availableEpisodesDetail[lang()].sort(
+                  (a: any, b: any) => a - b
+                )}
+              >
+                {(episode) => (
+                  <li
+                    class={selectedEpisode() == episode ? "selected" : ""}
+                    onClick={() => setSelectedEpisode(episode)}
+                  >
+                    {episode}
+                  </li>
+                )}
+              </For>
+            </Show>
+          </ul>
+        </div>
+        <Show when={currentTitle()?.lastEpisodeTimestamp[lang()]}>
+          <footer class="last-modified">
+            Last episode posted on <br /> {lastModified()}
+          </footer>
         </Show>
       </div>
-
-      <h2 class="episode-header">Episodes</h2>
-      <Toggle options={["sub", "dub"]} state={isDub} setState={setIsDub} />
-      <ul class="episode-list">
-        <Show
-          when={currentTitle()?.availableEpisodesDetail[lang()].length != 0}
-          fallback={<p class="error">nothing :{"("}</p>}
-        >
-          <For
-            each={currentTitle()?.availableEpisodesDetail[lang()].sort(
-              (a: any, b: any) => a - b
-            )}
-          >
-            {(episode) => (
-              <li
-                class={selectedEpisode() == episode ? "selected" : ""}
-                onClick={() => setSelectedEpisode(episode)}
-              >
-                {episode}
-              </li>
-            )}
-          </For>
-        </Show>
-      </ul>
-      <Show when={currentTitle()?.lastEpisodeTimestamp[lang()]}>
-        <p class="last-modified">
-          Last episode posted on <br /> {lastModified()}
-        </p>
-      </Show>
     </Show>
   );
 }

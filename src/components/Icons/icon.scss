@@ -5,8 +5,10 @@
 }
 
 .active .main-icon {
+    position: absolute;
+    cursor: pointer;
     height: auto;
-    opacity: 1;
-    height: 0;
-    opacity: 0;
+    right: 5px;
+    top: 10px;
+    font-size: 3em !important;
 }

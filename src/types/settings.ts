@@ -7,7 +7,7 @@ export interface Settings {
     titles: Accessor<Title[]>, 
     setTitles: (arg: Title[]) => void,
     currentTitle: Accessor<Title | undefined>,
-    setCurrentTitle: (arg: Title) => void
+    setCurrentTitle: (arg: Title | undefined) => void,
 }
 
 export enum Mode {
