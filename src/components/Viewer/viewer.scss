@@ -2,7 +2,7 @@ div.viewer-container {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: calc(100% - 60px);
+    min-height: calc(100% - 80px);
 
     .controls {
         display: flex;
@@ -18,6 +18,7 @@ div.viewer-container {
         list-style: none;
         padding: 10px;
         display: flex;
+        max-width: 90vw;
         flex-wrap: wrap;
         align-items: center;
         justify-content: center;
@@ -25,7 +26,7 @@ div.viewer-container {
 
     .episode-list li {
         padding: 15px;
-        width: 20px;
+        min-width: 25px;
         color: rgb(205, 205, 205);
         margin-bottom: 5px;
         background-color: #292929;

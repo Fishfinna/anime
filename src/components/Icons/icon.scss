@@ -9,6 +9,10 @@
     cursor: pointer;
     height: auto;
     right: 5px;
-    top: 10px;
+    top: 15px;
     font-size: 3em !important;
+
+    @media (max-width:350px) {
+        display: none;
+    }
 }
