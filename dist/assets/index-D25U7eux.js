@@ -37,7 +37,7 @@
             }
         }
     }
-    `,variables:{search:{allowAdult:!1,allowUnknown:!1,query:e},limit:4,page:t+1,countryOrigin:"ALL"}}}function mi(e){return{query:Pn`
+    `,variables:{search:{allowAdult:!1,allowUnknown:!1,query:e},limit:6,page:t+1,countryOrigin:"ALL"}}}function mi(e){return{query:Pn`
         query GetEpisodeLinks(
             $showId: String!, 
             $translationType: VaildTranslationTypeEnumType!, 
