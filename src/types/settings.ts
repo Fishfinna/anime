@@ -8,6 +8,10 @@ export interface Settings {
     setTitles: (arg: Title[]) => void,
     currentTitle: Accessor<Title | undefined>,
     setCurrentTitle: (arg: Title | undefined) => void,
+    isDub: Accessor<boolean>
+    setIsDub: (arg: boolean) => void
+    episodeNumber: Accessor<string>,
+    setEpisodeNumber: (arg: string) => void
 }
 
 export enum Mode {

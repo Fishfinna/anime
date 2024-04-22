@@ -8,6 +8,8 @@ export function SettingsProvider(props: { children: any }) {
   const [mode, setMode] = createSignal<Mode>(Mode.none);
   const [titles, setTitles] = createSignal<Title[]>([]);
   const [currentTitle, setCurrentTitle] = createSignal<Title | undefined>();
+  const [isDub, setIsDub] = createSignal<boolean>(false);
+  const [episodeNumber, setEpisodeNumber] = createSignal<string>("1");
 
   const updateLocalStorage = (settings: any) => {
     localStorage.setItem("settings", JSON.stringify(settings));
@@ -19,6 +21,8 @@ export function SettingsProvider(props: { children: any }) {
         mode: mode(),
         titles: titles(),
         currentTitle: currentTitle(),
+        isDub: isDub(),
+        episodeNumber: episodeNumber(),
       };
       updateLocalStorage(settings);
     }
@@ -31,6 +35,8 @@ export function SettingsProvider(props: { children: any }) {
       setMode(parsedSettings.mode);
       setTitles(parsedSettings.titles);
       setCurrentTitle(parsedSettings.currentTitle);
+      setIsDub(parsedSettings.isDub);
+      setEpisodeNumber(parsedSettings.episodeNumber);
     }
   }, []);
 
@@ -43,6 +49,10 @@ export function SettingsProvider(props: { children: any }) {
         setTitles,
         currentTitle,
         setCurrentTitle,
+        isDub,
+        setIsDub,
+        episodeNumber,
+        setEpisodeNumber,
       }}
     >
       {props.children}

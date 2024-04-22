@@ -7,11 +7,17 @@ import "./viewer.scss";
 import { convertUrlsToProperLinks } from "../../api/decodeUrl";
 
 export function Viewer() {
-  const { mode, currentTitle, setMode } = useContext(SettingsContext);
-  const [isDub, setIsDub] = createSignal(false);
+  const {
+    mode,
+    currentTitle,
+    setMode,
+    isDub,
+    setIsDub,
+    episodeNumber,
+    setEpisodeNumber,
+  } = useContext(SettingsContext);
   const [lang, setLang] = createSignal<"sub" | "dub">(isDub() ? "dub" : "sub");
   const [lastModified, setLastModified] = createSignal("");
-  const [selectedEpisode, setSelectedEpisode] = createSignal<string>("1");
   const [error, setError] = createSignal<string>();
   const [isLoading, setIsLoading] = createSignal<boolean>(false);
   const [urls, setUrls] = createSignal<string[]>([]);
@@ -49,8 +55,8 @@ export function Viewer() {
     );
     if (episodes) {
       const maxEpisodeNumber = Number(episodes[episodes?.length - 1]);
-      if (Number(selectedEpisode()) > maxEpisodeNumber) {
-        setSelectedEpisode(String(1));
+      if (Number(episodeNumber()) > maxEpisodeNumber) {
+        setEpisodeNumber(String(1));
       }
     }
 
@@ -62,10 +68,10 @@ export function Viewer() {
     const episodes = currentTitle()!?.availableEpisodesDetail[lang()].sort(
       (a: any, b: any) => a - b
     );
-    if (episodes?.includes(selectedEpisode()) && currentTitle() != undefined) {
+    if (episodes?.includes(episodeNumber()) && currentTitle() != undefined) {
       const selectedInfo: EpisodeVariables = {
         showId: currentTitle()?._id || "",
-        episodeString: selectedEpisode(),
+        episodeString: episodeNumber(),
         translationType: lang(),
       };
       try {
@@ -83,7 +89,7 @@ export function Viewer() {
         setIsLoading(false);
       }
     }
-  }, [selectedEpisode, isDub, lang]);
+  }, [episodeNumber, isDub, lang]);
 
   return (
     <Show when={mode() === Mode.episode}>
@@ -122,8 +128,8 @@ export function Viewer() {
               >
                 {(episode) => (
                   <li
-                    class={selectedEpisode() == episode ? "selected" : ""}
-                    onClick={() => setSelectedEpisode(episode)}
+                    class={episodeNumber() == episode ? "selected" : ""}
+                    onClick={() => setEpisodeNumber(episode)}
                   >
                     {episode}
                   </li>
