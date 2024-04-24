@@ -24,6 +24,10 @@ div.viewer-container {
         flex-wrap: wrap;
         align-items: center;
         justify-content: center;
+
+        @media (min-width: 768px) {
+            max-width: 70vw;
+        }
     }
 
     .episode-list li {

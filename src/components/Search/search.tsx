@@ -11,8 +11,15 @@ export function Search() {
   const [isLoading, setIsLoading] = createSignal<boolean>(false);
   const [error, setError] = createSignal<string | null>(null);
   const [isActive, setIsActive] = createSignal<boolean>(false);
-  const { mode, setMode, titles, setTitles, currentTitle, setCurrentTitle } =
-    useContext(SettingsContext);
+  const {
+    mode,
+    setMode,
+    titles,
+    setTitles,
+    currentTitle,
+    setCurrentTitle,
+    setEpisodeNumber,
+  } = useContext(SettingsContext);
   let debounceTimeout: number | undefined;
 
   async function submitSearch(event: Event) {
@@ -21,6 +28,7 @@ export function Search() {
       const searchText = inputRef()!.value;
       setMode(Mode.none);
       setIsLoading(true);
+      setEpisodeNumber("1");
       const { query, variables } = titlesQuery(searchText);
       try {
         const { data: response } = await client
