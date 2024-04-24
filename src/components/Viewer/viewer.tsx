@@ -102,8 +102,8 @@ export function Viewer() {
           <div class="video-container">
             <Show when={!isLoading()} fallback={<div class="loader"></div>}>
               <video
-                width="640"
-                height="360"
+                width="800"
+                height="450"
                 class="video-display"
                 controls
                 poster={currentTitle()?.thumbnail}
