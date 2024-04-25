@@ -1,5 +1,15 @@
 import axios from "axios";
 
+interface Link {
+  link: string;
+  hls: boolean;
+  mp4?: boolean;
+  resolutionStr: string;
+  priority: number;
+  fromCache?: string;
+  src?: string;
+}
+
 function decode(encoding: string): string {
     const result = encoding.replace(/../g, '$&\n')
                        .replace(/^01$/gm, '9')
@@ -48,7 +58,7 @@ export async function convertUrlsToProperLinks(sourceUrls: SourceUrl[]) {
 
             try {
                 const { data } = await axios.get(sourceUrl, { headers: { 'Content-Type': "application/json" } });
-                const links = data.links.map(({ link }: { link: string }) => link);
+                const links = data.links.sort((a: Link, b: Link) => a.priority - b.priority).map(({ link }: { link: string }) => link);
                 return links;
             } catch (error) {}
             } 

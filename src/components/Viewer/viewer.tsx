@@ -50,6 +50,7 @@ export function Viewer() {
 
   // handle the episode number
   createEffect(() => {
+    console.log({ urls: urls() });
     const episodes = currentTitle()!?.availableEpisodesDetail[lang()].sort(
       (a: any, b: any) => a - b
     );
