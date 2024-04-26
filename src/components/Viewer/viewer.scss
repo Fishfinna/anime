@@ -83,6 +83,9 @@ div.viewer-container {
         video.video-display {
             object-fit: cover;
             object-position: top;
+            outline: none !important;
+
+
 
             @media (max-width: 500px) {
                 border-radius: 20px;
