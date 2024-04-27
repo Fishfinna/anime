@@ -5,6 +5,7 @@ import { Toggle } from "../Toggle/toggle";
 import { EpisodeVariables, client, episodeQuery } from "../../api";
 import "./viewer.scss";
 import { convertUrlsToProperLinks } from "../../api/decodeUrl";
+import { Video } from "../Video/video";
 
 export function Viewer() {
   const {
@@ -101,16 +102,7 @@ export function Viewer() {
           </Show>
           <div class="video-container">
             <Show when={!isLoading()} fallback={<div class="loader"></div>}>
-              <video
-                width="800"
-                height="450"
-                class="video-display"
-                controls
-                poster={currentTitle()?.thumbnail}
-              >
-                <For each={urls()}>{(url) => <source src={url} />}</For>
-                Your browser does not support the video tag.
-              </video>
+              <Video poster={currentTitle()?.thumbnail} urls={urls} />
             </Show>
           </div>
 
