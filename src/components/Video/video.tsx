@@ -67,6 +67,7 @@ export function Video({ poster, urls }: VideoProps) {
         nativeAudioTracks: !overrideNative,
         nativeTextTracks: !overrideNative,
       },
+      playsinline: true,
       controls: true,
       preload: "auto",
       width: 800,
@@ -91,7 +92,7 @@ export function Video({ poster, urls }: VideoProps) {
       <For each={urls()}>
         {(url) => (
           <source
-            src={url.link}
+            src={!url.link.endsWith("m3u8") ? url.link : undefined}
             type={
               url.link.endsWith("m3u8") ? "application/x-mpegURL" : "video/mp4"
             }
