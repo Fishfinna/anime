@@ -56,8 +56,17 @@ export function Video({ poster, urls }: VideoProps) {
 
   onMount(() => {
     if (!videoRef) return;
+    var overrideNative = false;
 
     player = videojs(videoRef, {
+      html5: {
+        hls: {
+          overrideNative: overrideNative,
+        },
+        nativeVideoTracks: !overrideNative,
+        nativeAudioTracks: !overrideNative,
+        nativeTextTracks: !overrideNative,
+      },
       controls: true,
       preload: "auto",
       width: 800,
