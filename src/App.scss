@@ -40,6 +40,8 @@ body {
 .error {
   color: #b46464;
   margin-top: 10px;
+  max-width: 95vw;
+  text-overflow: word-wrap;
 }
 
 form * {

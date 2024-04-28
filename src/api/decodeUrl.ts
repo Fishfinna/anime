@@ -11,7 +11,7 @@ interface Link {
 }
 
 function decode(encoding: string): string {
-  const result = encoding
+  return encoding
     .replace(/../g, "$&\n")
     .replace(/^01$/gm, "9")
     .replace(/^08$/gm, "0")
@@ -44,7 +44,6 @@ function decode(encoding: string): string {
     .replace(/^51$/gm, "i")
     .replace(/\n/g, "")
     .replace(/\/clock/g, "/clock.json");
-  return result;
 }
 
 async function extractMp4FromEpisodeLink(episodeLink: string): Promise<url[]> {
@@ -88,7 +87,10 @@ async function extractMp4FromEpisodeLink(episodeLink: string): Promise<url[]> {
         } catch (error) {}
       }
     }
-    if (episodeLink.trim()) {
+    if (
+      episodeLink.trim() &&
+      !episodeLink.includes("workfields.maverickki.lol")
+    ) {
       mp4Links.push({ link: episodeLink, resolution: "unknown" });
     }
   } catch (error) {}

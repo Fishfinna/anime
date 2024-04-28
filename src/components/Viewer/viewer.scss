@@ -71,6 +71,7 @@ div.viewer-container {
     div.video-container {
         min-height: 360px;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
 

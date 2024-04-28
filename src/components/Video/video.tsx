@@ -82,7 +82,7 @@ export function Video({ poster, urls }: VideoProps) {
       }
     });
   });
-
+  console.log(urls());
   return (
     <video
       ref={(el) => (videoRef = el)}
@@ -92,7 +92,7 @@ export function Video({ poster, urls }: VideoProps) {
       <For each={urls()}>
         {(url) => (
           <source
-            src={!url.link.endsWith("m3u8") ? url.link : undefined}
+            src={url.link}
             type={
               url.link.endsWith("m3u8") ? "application/x-mpegURL" : "video/mp4"
             }
