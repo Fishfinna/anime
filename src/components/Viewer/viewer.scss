@@ -78,31 +78,5 @@ div.viewer-container {
             min-height: 0;
             height: auto;
         }
-
-
-        video.video-display {
-            object-fit: cover;
-            object-position: top;
-            outline: none !important;
-
-
-
-            @media (max-width: 500px) {
-                border-radius: 20px;
-                transform: scale(85%);
-                width: 90vw;
-                height: 50vw;
-            }
-
-            @media (min-width: 501px) and (max-width:899px) {
-                transform: scale(65%);
-                border-radius: 20px;
-            }
-
-            @media (min-width: 900px) {
-                max-width: 90%;
-                border-radius: 20px;
-            }
-        }
     }
 }

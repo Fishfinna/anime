@@ -21,7 +21,7 @@ export function Viewer() {
   const [lastModified, setLastModified] = createSignal("");
   const [error, setError] = createSignal<string>();
   const [isLoading, setIsLoading] = createSignal<boolean>(false);
-  const [urls, setUrls] = createSignal<string[]>([]);
+  const [urls, setUrls] = createSignal<url[]>([]);
   const dateOffset = 1000;
 
   if (mode() !== Mode.episode || !currentTitle()) {

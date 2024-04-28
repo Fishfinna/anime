@@ -16,7 +16,8 @@
     "npm": "^10.5.1",
     "sass": "^1.72.0",
     "scss": "^0.2.4",
-    "solid-js": "^1.8.15"
+    "solid-js": "^1.8.15",
+    "video.js": "^8.10.0"
   },
   "devDependencies": {
     "typescript": "^5.2.2",

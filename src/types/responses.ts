@@ -11,3 +11,8 @@ interface SourceUrl {
     downloadUrl: string;
   };
 }
+
+interface url {
+  link: string;
+  resolution: string;
+}
