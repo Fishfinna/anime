@@ -184,7 +184,7 @@
 }
 
 .video-container:focus-visible {
-    outline: none;
+    outline: none !important;
 }
 
 .video-js .vjs-big-play-button {
