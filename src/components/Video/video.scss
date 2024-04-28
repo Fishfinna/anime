@@ -81,11 +81,13 @@
     background-color: var(--vjs-theme-city--primary)
 }
 
-.vjs-theme-city .vjs-time-control {
+.vjs-theme-city .vjs-current-time {
     order: 1;
     display: block;
     line-height: 50px;
+    flex: 3;
     text-align: left;
+    font-size: 15px;
 }
 
 .video-js .vjs-remaining-time {
