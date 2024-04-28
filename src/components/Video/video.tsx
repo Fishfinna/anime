@@ -1,4 +1,4 @@
-import { onMount, onCleanup, Accessor } from "solid-js";
+import { onMount, onCleanup, Accessor, For } from "solid-js";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import "./video.scss";
@@ -63,17 +63,6 @@ export function Video({ poster, urls }: VideoProps) {
       width: 800,
       height: 450,
     });
-
-    if (urls()) {
-      const sources = urls().map((url) => {
-        let type = url.link.endsWith("m3u8") ? "application/x-mpegURL" : "";
-        return {
-          type,
-          src: url.link,
-        };
-      });
-      player.src(sources);
-    }
     document.addEventListener("keydown", handleKeyDown);
 
     onCleanup(() => {
@@ -90,6 +79,16 @@ export function Video({ poster, urls }: VideoProps) {
       poster={poster}
       class="video-js  vjs-theme-city"
     >
+      <For each={urls()}>
+        {(url) => (
+          <source
+            src={url.link}
+            type={
+              url.link.endsWith("m3u8") ? "application/x-mpegURL" : undefined
+            }
+          ></source>
+        )}
+      </For>
       Your browser does not support the video tag.
     </video>
   );

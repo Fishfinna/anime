@@ -132,12 +132,24 @@ export async function convertUrlsToProperLinks(
         for (let { link } of links) {
           results = results.concat(await extractMp4FromEpisodeLink(link));
         }
-
         return results;
       } catch (error) {}
     }
   });
 
   const links = await Promise.all(promises);
-  return links.flat().filter(Boolean) as url[];
+  return links
+    .flat()
+    .filter(Boolean)
+    .sort((a: url | undefined, b: url | undefined) => {
+      const aIsM3u8 = a?.link.endsWith("m3u8");
+      const bIsM3u8 = b?.link.endsWith("m3u8");
+      if (aIsM3u8 && !bIsM3u8) {
+        return 1;
+      }
+      if (!aIsM3u8 && bIsM3u8) {
+        return -1;
+      }
+      return 0;
+    }) as url[];
 }
