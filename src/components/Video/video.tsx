@@ -84,7 +84,7 @@ export function Video({ poster, urls }: VideoProps) {
           <source
             src={url.link}
             type={
-              url.link.endsWith("m3u8") ? "application/x-mpegURL" : undefined
+              url.link.endsWith("m3u8") ? "application/x-mpegURL" : "video/mp4"
             }
           ></source>
         )}
