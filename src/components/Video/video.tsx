@@ -65,10 +65,13 @@ export function Video({ poster, urls }: VideoProps) {
     });
 
     if (urls()) {
-      const sources = urls().map((url) => ({
-        type: "application/x-mpegURL",
-        src: url.link,
-      }));
+      const sources = urls().map((url) => {
+        let type = url.link.endsWith("m3u8") ? "application/x-mpegURL" : "";
+        return {
+          type,
+          src: url.link,
+        };
+      });
       player.src(sources);
     }
     document.addEventListener("keydown", handleKeyDown);

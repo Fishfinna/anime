@@ -96,7 +96,9 @@ async function extractMp4FromEpisodeLink(episodeLink: string): Promise<url[]> {
   return mp4Links;
 }
 
-export async function convertUrlsToProperLinks(sourceUrls: SourceUrl[]) {
+export async function convertUrlsToProperLinks(
+  sourceUrls: SourceUrl[]
+): Promise<url[]> {
   const baseUrl = "https://allanime.day";
 
   const promises = sourceUrls.map(async ({ sourceUrl }) => {
@@ -137,5 +139,5 @@ export async function convertUrlsToProperLinks(sourceUrls: SourceUrl[]) {
   });
 
   const links = await Promise.all(promises);
-  return links.flat().filter(Boolean);
+  return links.flat().filter(Boolean) as url[];
 }
