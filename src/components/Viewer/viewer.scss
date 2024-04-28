@@ -75,8 +75,19 @@ div.viewer-container {
         justify-content: center;
 
         @media (max-width: 500px) {
-            min-height: 0;
-            height: auto;
+            border-radius: 20px;
+            width: 96vw;
+            height: 50vw;
+        }
+
+        @media (min-width: 501px) and (max-width:899px) {
+            max-height: 50vw;
+            border-radius: 20px;
+        }
+
+        @media (min-width: 900px) {
+            max-width: 95vw;
+            border-radius: 20px;
         }
     }
 }
