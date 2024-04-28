@@ -183,7 +183,7 @@
     border-top: 0 solid transparent
 }
 
-.video-container:focus-visible {
+.video-js *:focus-visible {
     outline: none !important;
 }
 
