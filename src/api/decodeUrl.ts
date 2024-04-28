@@ -85,17 +85,13 @@ async function extractMp4FromEpisodeLink(episodeLink: string): Promise<url[]> {
           for (const line of lines) {
             mp4Links.push({ link: `${relativeLink}${line}`, resolution: "" });
           }
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
+        } catch (error) {}
       }
     }
     if (episodeLink.trim()) {
       mp4Links.push({ link: episodeLink, resolution: "unknown" });
     }
-  } catch (error) {
-    console.error("Error extracting MP4 from episode link:", error);
-  }
+  } catch (error) {}
 
   return mp4Links;
 }
@@ -134,7 +130,7 @@ export async function convertUrlsToProperLinks(sourceUrls: SourceUrl[]) {
         for (let { link } of links) {
           results = results.concat(await extractMp4FromEpisodeLink(link));
         }
-        console.log(results);
+
         return results;
       } catch (error) {}
     }

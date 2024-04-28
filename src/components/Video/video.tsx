@@ -10,37 +10,45 @@ interface VideoProps {
 
 export function Video({ poster, urls }: VideoProps) {
   let videoRef: HTMLVideoElement | null = null;
-  let player: videojs.Player | null = null;
+  let player: typeof videojs.players | null = null;
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (!player) return;
-
-    e.preventDefault();
     switch (e.key) {
       case " ":
+        e.preventDefault();
         player.paused() ? player.play() : player.pause();
         break;
       case "f":
+        e.preventDefault();
         player.isFullscreen()
           ? player.exitFullscreen()
           : player.requestFullscreen();
         break;
       case "esc":
-        player.exitFullscreen();
+        e.preventDefault();
+        player.isFullscreen()
+          ? player.exitFullscreen()
+          : player.requestFullscreen();
         break;
       case "ArrowUp":
+        e.preventDefault();
         player.volume(Math.min(player.volume() + 0.1, 1));
         break;
       case "ArrowDown":
+        e.preventDefault();
         player.volume(Math.max(player.volume() - 0.1, 0));
         break;
       case "ArrowRight":
+        e.preventDefault();
         player.currentTime(player.currentTime() + 10);
         break;
       case "ArrowLeft":
+        e.preventDefault();
         player.currentTime(player.currentTime() - 10);
         break;
       case "m":
+        e.preventDefault();
         player.muted(!player.muted());
         break;
     }
@@ -77,7 +85,7 @@ export function Video({ poster, urls }: VideoProps) {
     <video
       ref={(el) => (videoRef = el)}
       poster={poster}
-      class="video-js video-display dark-theme"
+      class="video-js  vjs-theme-city"
     >
       Your browser does not support the video tag.
     </video>
