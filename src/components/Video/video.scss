@@ -224,3 +224,9 @@
         background-color: #3131317c !important;
     }
 }
+
+@media (hover: none) and (pointer: coarse) {
+    .vjs-volume-panel {
+        display: none !important;
+    }
+}
