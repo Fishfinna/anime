@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "vite --port=8080",
+    "vite": "vite --host=${npm_config_host} --port=${npm_config_port}",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "deploy": "git pull --rebase & npm run build & git add dist -f & git commit -m 'deploy' & git subtree push --prefix dist origin gh-pages"
