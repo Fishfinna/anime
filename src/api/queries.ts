@@ -62,3 +62,23 @@ export function episodeQuery(episodeVariables: EpisodeVariables) {
     variables: episodeVariables,
   };
 }
+
+export function getShow(showId: string) {
+  return {
+    query: gql`
+      query Show($showId: String!) {
+        show(_id: $showId) {
+          name
+          englishName
+          lastEpisodeTimestamp
+          banner
+          nextAiringEpisode
+          availableEpisodesDetail
+        }
+      }
+    `,
+    variables: {
+      showId,
+    },
+  };
+}
