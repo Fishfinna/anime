@@ -9,7 +9,7 @@ export function SettingsProvider(props: { children: any }) {
   const [titles, setTitles] = createSignal<Title[]>([]);
   const [currentTitle, setCurrentTitle] = createSignal<Title | undefined>();
   const [isDub, setIsDub] = createSignal<boolean>(false);
-  const [episodeNumber, setEpisodeNumber] = createSignal<string>("1");
+  const [episodeNumber, setEpisodeNumber] = createSignal<string | undefined>();
 
   const updateLocalStorage = (settings: any) => {
     localStorage.setItem("settings", JSON.stringify(settings));
