@@ -82,7 +82,6 @@ export function Video({ poster, urls }: VideoProps) {
       }
     });
   });
-  console.log(urls());
   return (
     <video
       ref={(el) => (videoRef = el)}

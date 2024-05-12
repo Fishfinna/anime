@@ -54,10 +54,17 @@ export function Viewer() {
     const episodes = currentTitle()!?.availableEpisodesDetail[lang()].sort(
       (a: any, b: any) => a - b
     );
+    if (!episodeNumber() && episodes) {
+      setEpisodeNumber(
+        currentTitle()!?.availableEpisodesDetail[lang()].sort(
+          (a: any, b: any) => a - b
+        )[0]
+      );
+    }
     if (episodes) {
       const maxEpisodeNumber = Number(episodes[episodes?.length - 1]);
       if (Number(episodeNumber()) > maxEpisodeNumber) {
-        setEpisodeNumber(String(1));
+        setEpisodeNumber("1");
       }
     }
 
