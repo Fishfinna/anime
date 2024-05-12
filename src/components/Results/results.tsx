@@ -21,7 +21,7 @@ export function Results() {
               }}
             >
               <img src={title.thumbnail} />
-              <h3 class="thumbnail-title">{title.name}</h3>
+              <h3 class="thumbnail-title">{title.englishName || title.name}</h3>
             </div>
           )}
         </For>

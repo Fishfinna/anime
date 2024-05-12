@@ -1,61 +1,64 @@
-import { gql } from '@urql/core';
+import { gql } from "@urql/core";
 
 export interface EpisodeVariables {
-    showId: string, 
-    episodeString: string, 
-    translationType: string
+  showId: string;
+  episodeString: string;
+  translationType: string;
 }
 
 export function titlesQuery(query: string, page: number = 0) {
-    return ({
+  return {
     query: gql`
-    query SearchAnime(
+      query SearchAnime(
         $search: SearchInput
         $limit: Int
         $page: Int
         $countryOrigin: VaildCountryOriginEnumType
-    ) {
+      ) {
         shows(
-        search: $search
-        limit: $limit
-        page: $page
-        countryOrigin: $countryOrigin
+          search: $search
+          limit: $limit
+          page: $page
+          countryOrigin: $countryOrigin
         ) {
-        edges {
+          edges {
             _id
+            englishName
             name
             thumbnail
             __typename
             availableEpisodesDetail
             lastEpisodeTimestamp
-            }
+          }
         }
-    }
-    `,    
-    variables:  {
-        search: { allowAdult: false, allowUnknown: false, query},
-        limit: 6,
-        page: page + 1,
-        countryOrigin: "ALL",
-    }
-    });
+      }
+    `,
+    variables: {
+      search: { allowAdult: false, allowUnknown: false, query },
+      limit: 6,
+      page: page + 1,
+      countryOrigin: "ALL",
+    },
+  };
 }
 
 export function episodeQuery(episodeVariables: EpisodeVariables) {
-    return ({
-        query: gql`
-        query GetEpisodeLinks(
-            $showId: String!, 
-            $translationType: VaildTranslationTypeEnumType!, 
-            $episodeString: String!
-        ) {
+  return {
+    query: gql`
+      query GetEpisodeLinks(
+        $showId: String!
+        $translationType: VaildTranslationTypeEnumType!
+        $episodeString: String!
+      ) {
         episode(
-            showId: $showId, 
-            translationType: $translationType, 
-            episodeString: $episodeString) {
-                sourceUrls
-            }
-        }`,
-        variables: episodeVariables
-    })
+          showId: $showId
+          translationType: $translationType
+          episodeString: $episodeString
+        ) {
+          sourceUrls
+        }
+      }
+    `,
+    variables: episodeVariables,
+  };
 }

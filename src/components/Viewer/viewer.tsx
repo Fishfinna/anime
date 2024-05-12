@@ -96,7 +96,9 @@ export function Viewer() {
     <Show when={mode() === Mode.episode}>
       <div class="viewer-container">
         <div class="controls">
-          <h1 class="show-title">{currentTitle()?.name}</h1>
+          <h1 class="show-title">
+            {currentTitle()?.englishName || currentTitle()?.name}
+          </h1>
           <Show when={error()}>
             <div class="error">{error()}</div>
           </Show>
