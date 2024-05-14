@@ -76,10 +76,13 @@ export function Viewer() {
     const episodes = currentTitle()!?.availableEpisodesDetail[lang()].sort(
       (a: any, b: any) => a - b
     );
-    if (episodes?.includes(episodeNumber()) && currentTitle() != undefined) {
+    if (
+      episodes?.includes(episodeNumber() as string) &&
+      currentTitle() != undefined
+    ) {
       const selectedInfo: EpisodeVariables = {
         showId: currentTitle()?._id || "",
-        episodeString: episodeNumber(),
+        episodeString: episodeNumber() || "1",
         translationType: lang(),
       };
       try {
