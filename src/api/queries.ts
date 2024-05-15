@@ -68,6 +68,7 @@ export function getShow(showId: string) {
     query: gql`
       query Show($showId: String!) {
         show(_id: $showId) {
+          _id
           name
           englishName
           lastEpisodeTimestamp

@@ -1,8 +1,9 @@
-import { Router, Route, useNavigate, redirect } from "@solidjs/router";
+import { Router, Route, redirect } from "@solidjs/router";
 import { createEffect } from "solid-js";
 import { Search } from "./components/Search/search";
 import "./App.scss";
 import { SettingsProvider } from "./context/settingsContext";
+import { Error } from "./components/Error/error";
 import { Results } from "./components/Results/results";
 import { Viewer } from "./components/Viewer/viewer";
 
@@ -20,26 +21,19 @@ export default function App() {
             <>
               <Search />
               <Results />
-              <Viewer />
             </>
           )}
         ></Route>
         <Route
-          path="anime/:showid"
-          component={(data) => <p>{JSON.stringify(data)}</p>}
+          path="anime/:showId"
+          component={(data) => (
+            <>
+              <Search />
+              <Viewer showId={data.params.showId} />
+            </>
+          )}
         ></Route>
-        <Route
-          path="*"
-          component={() => {
-            const navigate = useNavigate();
-            return (
-              <>
-                <h1>Show not found</h1>
-                <button onClick={() => navigate("anime")}>Return Home</button>
-              </>
-            );
-          }}
-        ></Route>
+        <Route path="*" component={() => <Error />}></Route>
       </Router>
     </SettingsProvider>
   );

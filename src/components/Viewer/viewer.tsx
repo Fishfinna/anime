@@ -6,8 +6,10 @@ import { EpisodeVariables, client, episodeQuery } from "../../api";
 import "./viewer.scss";
 import { convertUrlsToProperLinks } from "../../api/decodeUrl";
 import { Video } from "../Video/video";
+import { Error } from "../Error/error";
+import { getShow } from "../../api";
 
-export function Viewer() {
+export function Viewer(param: { showId: string }) {
   const {
     mode,
     currentTitle,
@@ -24,7 +26,14 @@ export function Viewer() {
   const [urls, setUrls] = createSignal<url[]>([]);
   const dateOffset = 1000;
 
-  if (mode() !== Mode.episode || !currentTitle()) {
+  createEffect(() => {
+    // TODO implement this you will need to use getShow and ref how we gql
+    if (!currentTitle()) {
+      param.showId;
+    }
+  }, []);
+
+  if (mode() !== Mode.episode) {
     setMode(Mode.none);
   }
 
@@ -103,7 +112,7 @@ export function Viewer() {
   }, [episodeNumber, isDub, lang]);
 
   return (
-    <Show when={mode() === Mode.episode}>
+    <Show when={mode() === Mode.episode} fallback={<Error />}>
       <div class="viewer-container">
         <div class="controls">
           <h1 class="show-title">

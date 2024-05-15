@@ -1,5 +1,6 @@
 import { For, Show, useContext } from "solid-js";
 import { SettingsContext } from "../../context/settingsContext";
+import { useNavigate } from "@solidjs/router";
 import { Mode } from "../../types/settings";
 
 import "./results.scss";
@@ -7,6 +8,7 @@ import "./results.scss";
 export function Results() {
   const { mode, setMode, titles, setCurrentTitle } =
     useContext(SettingsContext);
+  const navigate = useNavigate();
 
   return (
     <Show when={titles() && titles().length !== 0 && mode() == Mode.title}>
@@ -16,7 +18,7 @@ export function Results() {
             <div
               class="title"
               onClick={() => {
-                setCurrentTitle(title);
+                navigate(title._id);
                 setMode(Mode.episode);
               }}
             >
