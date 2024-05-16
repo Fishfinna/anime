@@ -1,8 +1,10 @@
-import { Icon } from "../Icons/icon";
 import { createSignal, onCleanup, useContext, Show } from "solid-js";
+import { useNavigate } from "@solidjs/router";
+
 import { client, titlesQuery } from "../../api";
 import { SettingsContext } from "../../context/settingsContext";
 import { Mode } from "../../types/settings";
+import { Icon } from "../Icons/icon";
 
 import "./search.scss";
 
@@ -21,6 +23,7 @@ export function Search() {
     setEpisodeNumber,
   } = useContext(SettingsContext);
   let debounceTimeout: number | undefined;
+  const navigate = useNavigate();
 
   async function submitSearch(event: Event) {
     event.preventDefault();
@@ -80,6 +83,7 @@ export function Search() {
         onClick={() => {
           setMode(Mode.none);
           setIsActive(false);
+          navigate("/anime");
         }}
         style={{ "font-size": "100px", color: "#4e4e4f" }}
       />

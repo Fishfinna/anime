@@ -6,13 +6,14 @@ import { EpisodeVariables, client, episodeQuery } from "../../api";
 import "./viewer.scss";
 import { convertUrlsToProperLinks } from "../../api/decodeUrl";
 import { Video } from "../Video/video";
-import { Error } from "../Error/error";
+import { ErrorPage } from "../Error/error";
 import { getShow } from "../../api";
 
 export function Viewer(param: { showId: string }) {
   const {
     mode,
     currentTitle,
+    setCurrentTitle,
     setMode,
     isDub,
     setIsDub,
@@ -26,10 +27,26 @@ export function Viewer(param: { showId: string }) {
   const [urls, setUrls] = createSignal<url[]>([]);
   const dateOffset = 1000;
 
-  createEffect(() => {
-    // TODO implement this you will need to use getShow and ref how we gql
+  createEffect(async () => {
     if (!currentTitle()) {
-      param.showId;
+      setIsLoading(true);
+      try {
+        const showId = param.showId;
+        const { query, variables } = getShow(showId);
+        const { data: response } = await client
+          .query(query, variables)
+          .toPromise();
+        const showData = response.show;
+
+        if (!showData) {
+          throw new Error("No search results.");
+        }
+        setCurrentTitle(showData);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
     }
   }, []);
 
@@ -112,44 +129,49 @@ export function Viewer(param: { showId: string }) {
   }, [episodeNumber, isDub, lang]);
 
   return (
-    <Show when={mode() === Mode.episode} fallback={<Error />}>
+    <Show when={mode() === Mode.episode}>
       <div class="viewer-container">
         <div class="controls">
           <h1 class="show-title">
             {currentTitle()?.englishName || currentTitle()?.name}
           </h1>
-          <Show when={error()}>
-            <div class="error">{error()}</div>
-          </Show>
-          <div class="video-container">
-            <Show when={!isLoading()} fallback={<div class="loader"></div>}>
-              <Video poster={currentTitle()?.thumbnail} urls={urls} />
-            </Show>
-          </div>
+          <Show when={!error()} fallback={<div class="error">{error()}</div>}>
+            <div class="video-container">
+              <Show when={!isLoading()} fallback={<div class="loader"></div>}>
+                <Video poster={currentTitle()?.thumbnail} urls={urls} />
+              </Show>
+            </div>
 
-          <h2 class="episode-header">Episodes</h2>
-          <Toggle options={["sub", "dub"]} state={isDub} setState={setIsDub} />
-          <ul class="episode-list">
-            <Show
-              when={currentTitle()?.availableEpisodesDetail[lang()].length != 0}
-              fallback={<p class="error">nothing :{"("}</p>}
-            >
-              <For
-                each={currentTitle()?.availableEpisodesDetail[lang()].sort(
-                  (a: any, b: any) => a - b
-                )}
+            <h2 class="episode-header">Episodes</h2>
+            <Toggle
+              options={["sub", "dub"]}
+              state={isDub}
+              setState={setIsDub}
+            />
+            <ul class="episode-list">
+              <Show
+                when={
+                  currentTitle()?.availableEpisodesDetail[lang()].length != 0
+                }
+                fallback={<p class="error">nothing :{"("}</p>}
               >
-                {(episode) => (
-                  <li
-                    class={episodeNumber() == episode ? "selected" : ""}
-                    onClick={() => setEpisodeNumber(episode)}
-                  >
-                    {episode}
-                  </li>
-                )}
-              </For>
-            </Show>
-          </ul>
+                <For
+                  each={currentTitle()?.availableEpisodesDetail[lang()].sort(
+                    (a: any, b: any) => a - b
+                  )}
+                >
+                  {(episode) => (
+                    <li
+                      class={episodeNumber() == episode ? "selected" : ""}
+                      onClick={() => setEpisodeNumber(episode)}
+                    >
+                      {episode}
+                    </li>
+                  )}
+                </For>
+              </Show>
+            </ul>
+          </Show>
         </div>
         <Show when={currentTitle()?.lastEpisodeTimestamp[lang()]}>
           <footer class="last-modified">

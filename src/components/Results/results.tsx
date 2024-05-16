@@ -18,7 +18,8 @@ export function Results() {
             <div
               class="title"
               onClick={() => {
-                navigate(title._id);
+                navigate(`/anime/${title._id}`);
+                setCurrentTitle(title);
                 setMode(Mode.episode);
               }}
             >

@@ -3,7 +3,7 @@ import { createEffect } from "solid-js";
 import { Search } from "./components/Search/search";
 import "./App.scss";
 import { SettingsProvider } from "./context/settingsContext";
-import { Error } from "./components/Error/error";
+import { ErrorPage } from "./components/Error/error";
 import { Results } from "./components/Results/results";
 import { Viewer } from "./components/Viewer/viewer";
 
@@ -29,11 +29,12 @@ export default function App() {
           component={(data) => (
             <>
               <Search />
+              <Results />
               <Viewer showId={data.params.showId} />
             </>
           )}
         ></Route>
-        <Route path="*" component={() => <Error />}></Route>
+        <Route path="*" component={() => <ErrorPage />}></Route>
       </Router>
     </SettingsProvider>
   );
