@@ -105,13 +105,13 @@ export function Search() {
           placeholder="search"
           onFocus={() => {
             setMode(!currentTitle() ? Mode.title : Mode.episode);
+            navigate("/anime");
             setIsActive(true);
             window.scrollTo(0, 0);
           }}
           onBlur={() => setIsActive(!!titles().length)}
         ></input>
       </form>
-
       <Show when={error()}>
         <div class="error">{error()}</div>
       </Show>

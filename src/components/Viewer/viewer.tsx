@@ -6,15 +6,15 @@ import { EpisodeVariables, client, episodeQuery } from "../../api";
 import "./viewer.scss";
 import { convertUrlsToProperLinks } from "../../api/decodeUrl";
 import { Video } from "../Video/video";
-import { ErrorPage } from "../Error/error";
 import { getShow } from "../../api";
+import { useNavigate } from "@solidjs/router";
 
 export function Viewer(param: { showId: string }) {
   const {
     mode,
+    setMode,
     currentTitle,
     setCurrentTitle,
-    setMode,
     isDub,
     setIsDub,
     episodeNumber,
@@ -25,6 +25,7 @@ export function Viewer(param: { showId: string }) {
   const [error, setError] = createSignal<string>();
   const [isLoading, setIsLoading] = createSignal<boolean>(false);
   const [urls, setUrls] = createSignal<url[]>([]);
+  const navigator = useNavigate();
   const dateOffset = 1000;
 
   createEffect(async () => {
@@ -47,10 +48,13 @@ export function Viewer(param: { showId: string }) {
       } finally {
         setIsLoading(false);
       }
+    } else if (navigator.arguments) {
+      console.log("nav", JSON.stringify(navigator.arguments));
     }
   }, []);
 
   if (mode() !== Mode.episode) {
+    navigator("/anime");
     setMode(Mode.none);
   }
 
