@@ -31,8 +31,8 @@ export default function App() {
           component={(data) => (
             <>
               <Search />
-              <Results />
               <Viewer showId={data.params.showId} />
+              <Results />
             </>
           )}
         ></Route>

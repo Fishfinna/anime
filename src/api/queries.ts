@@ -35,7 +35,7 @@ export function titlesQuery(query: string, page: number = 0) {
     `,
     variables: {
       search: { allowAdult: false, allowUnknown: false, query },
-      limit: 6,
+      limit: 8,
       page: page + 1,
       countryOrigin: "ALL",
     },

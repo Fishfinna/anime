@@ -1,5 +1,5 @@
 import { createSignal, onCleanup, useContext, Show, onMount } from "solid-js";
-import { useNavigate } from "@solidjs/router";
+import { useLocation, useNavigate } from "@solidjs/router";
 
 import { client, titlesQuery } from "../../api";
 import { SettingsContext } from "../../context/settingsContext";
@@ -13,7 +13,6 @@ export function Search() {
   const [isLoading, setIsLoading] = createSignal<boolean>(false);
   const [error, setError] = createSignal<string | null>(null);
   const [isActive, setIsActive] = createSignal<boolean>(false);
-  const navigator = useNavigate();
   const {
     mode,
     setMode,
@@ -25,6 +24,14 @@ export function Search() {
   } = useContext(SettingsContext);
   let debounceTimeout: number | undefined;
   const navigate = useNavigate();
+  const location = useLocation();
+
+  onMount(() => {
+    const showId = location.pathname.replace("/anime", "").slice(1);
+    if (mode() === Mode.episode && !showId) {
+      setMode(Mode.none);
+    }
+  });
 
   async function submitSearch(event: Event) {
     event.preventDefault();
