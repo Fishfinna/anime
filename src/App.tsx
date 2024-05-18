@@ -17,12 +17,14 @@ export default function App() {
       <Router>
         <Route
           path="anime"
-          component={() => (
-            <>
-              <Search />
-              <Results />
-            </>
-          )}
+          component={() => {
+            return (
+              <>
+                <Search />
+                <Results />
+              </>
+            );
+          }}
         ></Route>
         <Route
           path="anime/:showId"

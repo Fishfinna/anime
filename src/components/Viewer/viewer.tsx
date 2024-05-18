@@ -48,8 +48,6 @@ export function Viewer(param: { showId: string }) {
       } finally {
         setIsLoading(false);
       }
-    } else if (navigator.arguments) {
-      console.log("nav", JSON.stringify(navigator.arguments));
     }
   }, []);
 

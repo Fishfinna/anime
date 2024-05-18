@@ -1,4 +1,4 @@
-import { createSignal, onCleanup, useContext, Show } from "solid-js";
+import { createSignal, onCleanup, useContext, Show, onMount } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 
 import { client, titlesQuery } from "../../api";
@@ -13,6 +13,7 @@ export function Search() {
   const [isLoading, setIsLoading] = createSignal<boolean>(false);
   const [error, setError] = createSignal<string | null>(null);
   const [isActive, setIsActive] = createSignal<boolean>(false);
+  const navigator = useNavigate();
   const {
     mode,
     setMode,
@@ -105,7 +106,6 @@ export function Search() {
           placeholder="search"
           onFocus={() => {
             setMode(!currentTitle() ? Mode.title : Mode.episode);
-            navigate("/anime");
             setIsActive(true);
             window.scrollTo(0, 0);
           }}
