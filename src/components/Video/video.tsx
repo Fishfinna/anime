@@ -12,8 +12,22 @@ export function Video({ poster, urls }: VideoProps) {
   let videoRef: HTMLVideoElement | null = null;
   let player: typeof videojs.players | null = null;
 
+  const isFocusableElement = (element: Element): boolean => {
+    const focusableElements = ["INPUT", "TEXTAREA", "SELECT", "BUTTON"];
+    return (
+      focusableElements.includes(element.tagName) ||
+      element.getAttribute("contenteditable") === "true"
+    );
+  };
+
   const handleKeyDown = (e: KeyboardEvent) => {
     if (!player) return;
+
+    const activeElement = document.activeElement;
+    if (activeElement && isFocusableElement(activeElement)) {
+      return;
+    }
+
     switch (e.key) {
       case " ":
         e.preventDefault();
