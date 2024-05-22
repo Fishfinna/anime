@@ -8,7 +8,7 @@ import { convertUrlsToProperLinks } from "../../api/decodeUrl";
 import { Video } from "../Video/video";
 import { getShow } from "../../api";
 import { ErrorPage } from "../Error/error";
-import { useNavigate } from "@solidjs/router";
+import { Quality } from "../Quality/quality";
 
 export function Viewer(param: { showId: string }) {
   const {
@@ -144,11 +144,13 @@ export function Viewer(param: { showId: string }) {
               </div>
 
               <h2 class="episode-header">Episodes</h2>
+
               <Toggle
                 options={["sub", "dub"]}
                 state={isDub}
                 setState={setIsDub}
               />
+
               <ul class="episode-list">
                 <Show
                   when={
