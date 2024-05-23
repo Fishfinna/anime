@@ -87,7 +87,7 @@ export function Video({ poster, urls }: VideoProps) {
       width: 800,
       height: 450,
     });
-    player.controlBar.addChild("QualitySelector");
+
     document.addEventListener("keydown", handleKeyDown);
 
     onCleanup(() => {
