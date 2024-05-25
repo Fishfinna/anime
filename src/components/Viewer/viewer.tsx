@@ -8,7 +8,6 @@ import { convertUrlsToProperLinks } from "../../api/decodeUrl";
 import { Video } from "../Video/video";
 import { getShow } from "../../api";
 import { ErrorPage } from "../Error/error";
-import { Quality } from "../Quality/quality";
 
 export function Viewer(param: { showId: string }) {
   const {
