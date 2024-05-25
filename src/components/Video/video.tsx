@@ -10,7 +10,7 @@ interface VideoProps {
 
 export function Video({ poster, urls }: VideoProps) {
   let videoRef: HTMLVideoElement | null = null;
-  let player: videojs.Player | null = null;
+  let player: any = null;
 
   const isFocusableElement = (element: Element): boolean => {
     const focusableElements = ["INPUT", "TEXTAREA", "SELECT", "BUTTON"];
