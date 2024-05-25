@@ -1,5 +1,5 @@
 import { createSignal, onCleanup, useContext, Show, onMount } from "solid-js";
-import { useLocation, useNavigate } from "@solidjs/router";
+import { useNavigate } from "@solidjs/router";
 
 import { client, titlesQuery } from "../../api";
 import { SettingsContext } from "../../context/settingsContext";
