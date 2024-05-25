@@ -1,4 +1,4 @@
-import { createSignal, onCleanup, useContext, Show, onMount } from "solid-js";
+import { createSignal, onCleanup, useContext, Show } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 
 import { client, titlesQuery } from "../../api";
