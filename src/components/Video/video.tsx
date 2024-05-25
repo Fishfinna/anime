@@ -21,7 +21,6 @@ export function Video({ poster, urls }: VideoProps) {
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
-    console.log(e);
     if (!player) return;
 
     const activeElement = document.activeElement;

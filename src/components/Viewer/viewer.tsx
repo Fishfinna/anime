@@ -9,6 +9,12 @@ import { Video } from "../Video/video";
 import { getShow } from "../../api";
 import { ErrorPage } from "../Error/error";
 
+async function getUrls(episodeVariables: EpisodeVariables) {
+  const { query, variables } = episodeQuery(episodeVariables);
+  const { data } = await client.query(query, variables).toPromise();
+  return await convertUrlsToProperLinks(data.episode.sourceUrls);
+}
+
 export function Viewer(param: { showId: string }) {
   const {
     mode,
@@ -27,6 +33,7 @@ export function Viewer(param: { showId: string }) {
   const [urls, setUrls] = createSignal<url[]>([]);
   const dateOffset = 1000;
 
+  // use the show id for the page
   createEffect(async () => {
     if (param.showId) {
       setMode(Mode.episode);
@@ -42,6 +49,13 @@ export function Viewer(param: { showId: string }) {
           throw new Error("No search results.");
         }
         setCurrentTitle(showData);
+        setUrls(
+          await getUrls({
+            showId: currentTitle()?._id || "",
+            episodeString: episodeNumber() || "1",
+            translationType: lang(),
+          })
+        );
       } catch (err: any) {
         setError(err.message);
         setCurrentTitle(undefined);
@@ -112,12 +126,7 @@ export function Viewer(param: { showId: string }) {
       };
       try {
         setIsLoading(true);
-        const { query, variables } = episodeQuery(selectedInfo);
-        const { data } = await client.query(query, variables).toPromise();
-        const properUrls = await convertUrlsToProperLinks(
-          data.episode.sourceUrls
-        );
-        setUrls(properUrls);
+        setUrls(await getUrls(selectedInfo));
         setError("");
       } catch (err: any) {
         setError(err.message);
