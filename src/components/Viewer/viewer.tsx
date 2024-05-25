@@ -15,7 +15,7 @@ async function getUrls(episodeVariables: EpisodeVariables) {
   return await convertUrlsToProperLinks(data.episode.sourceUrls);
 }
 
-export function Viewer(param: { showId: string }) {
+export function Viewer(param: { showId?: string }) {
   const {
     mode,
     setMode,
@@ -62,8 +62,6 @@ export function Viewer(param: { showId: string }) {
       } finally {
         setIsLoading(false);
       }
-    } else {
-      setMode(Mode.none);
     }
   }, []);
 

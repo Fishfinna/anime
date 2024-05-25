@@ -24,14 +24,6 @@ export function Search() {
   } = useContext(SettingsContext);
   let debounceTimeout: number | undefined;
   const navigate = useNavigate();
-  const location = useLocation();
-
-  onMount(() => {
-    const showId = location.pathname.replace("/anime", "").slice(1);
-    if (mode() === Mode.episode && !showId) {
-      setMode(Mode.none);
-    }
-  });
 
   async function submitSearch(event: Event) {
     event.preventDefault();

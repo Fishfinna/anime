@@ -22,6 +22,7 @@ export default function App() {
               <>
                 <Search />
                 <Results />
+                <Viewer />
               </>
             );
           }}
