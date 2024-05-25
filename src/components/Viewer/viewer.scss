@@ -72,8 +72,14 @@ div.viewer-container {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: start;
+        justify-content: center;
         height: 50vw;
+
+        .loader {
+            max-height: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
         @media (max-width: 500px) {
             border-radius: 20px;
