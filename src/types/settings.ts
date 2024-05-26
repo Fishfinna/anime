@@ -12,6 +12,8 @@ export interface Settings {
   setIsDub: (arg: boolean) => void;
   episodeNumber: Accessor<string | undefined>;
   setEpisodeNumber: (arg: string) => void;
+  searchTerm: Accessor<string | undefined>;
+  setSearchTerm: (arg: string) => void;
 }
 
 export enum Mode {

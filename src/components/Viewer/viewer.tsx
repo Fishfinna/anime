@@ -58,10 +58,12 @@ export function Viewer(param: { showId?: string }) {
         );
       } catch (err: any) {
         setError(err.message);
-        setCurrentTitle(undefined);
       } finally {
         setIsLoading(false);
       }
+    }
+    if (!currentTitle()) {
+      setMode(Mode.none);
     }
   }, []);
 
