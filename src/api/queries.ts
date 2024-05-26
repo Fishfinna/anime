@@ -6,7 +6,7 @@ export interface EpisodeVariables {
   translationType: string;
 }
 
-export function titlesQuery(query: string, page: number = 0) {
+export function titlesQuery(query: string, page: number = 1) {
   return {
     query: gql`
       query SearchAnime(
@@ -35,8 +35,8 @@ export function titlesQuery(query: string, page: number = 0) {
     `,
     variables: {
       search: { allowAdult: false, allowUnknown: false, query },
-      limit: 8,
-      page: page + 1,
+      limit: 6,
+      page: page,
       countryOrigin: "ALL",
     },
   };
