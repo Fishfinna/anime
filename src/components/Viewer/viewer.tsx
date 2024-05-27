@@ -11,7 +11,7 @@ import { getShow } from "../../api";
 async function getUrls(episodeVariables: EpisodeVariables) {
   const { query, variables } = episodeQuery(episodeVariables);
   const { data } = await client.query(query, variables).toPromise();
-  if (!data.episode) {
+  if (!data.episode?.sourceUrls) {
     throw new Error("No episodes found, please try another translation type.");
   }
   return await convertUrlsToProperLinks(data.episode.sourceUrls);
@@ -114,10 +114,6 @@ export function Viewer(param: { showId?: string }) {
 
   // request for episode sources
   createEffect(async () => {
-    const episodes = currentTitle()!?.availableEpisodesDetail[lang()].sort(
-      (a: any, b: any) => a - b
-    );
-
     setIsLoading(true);
     const selectedInfo: EpisodeVariables = {
       showId: currentTitle()?._id || "",
