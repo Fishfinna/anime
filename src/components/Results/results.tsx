@@ -5,6 +5,7 @@ import { Mode } from "../../types/settings";
 import { client, titlesQuery } from "../../api";
 
 import "./results.scss";
+import { Icon } from "../Icons/icon";
 
 export function Results() {
   const {
@@ -30,6 +31,7 @@ export function Results() {
     if (searchTerm()?.trim() != "") {
       setIsLoading(true);
       setEpisodeNumber("1");
+      setPage(1);
       const { query, variables } = titlesQuery(`${searchTerm()}`, page());
       try {
         const { data: response } = await client
@@ -66,43 +68,37 @@ export function Results() {
       <Show when={isLoading()}>
         <div class="loader"></div>
       </Show>
-      <Show when={titles() && titles().length !== 0}>
-        <div class="results-container">
-          <For each={titles()}>
-            {(title) => (
-              <div
-                class="title"
-                onClick={() => {
-                  setCurrentTitle(title);
-                  setMode(Mode.episode);
-                  setSearchTerm("");
-                  navigate(`/anime/${title._id}`);
-                }}
-              >
-                <img src={title.thumbnail} />
-                <h3 class="thumbnail-title">
-                  {title.englishName || title.name}
-                </h3>
-              </div>
-            )}
-          </For>
-        </div>
-        <Show when={page() != 1 || hasNextPage()}>
-          <div class="page-control">
-            <button disabled={page() == 1} onClick={() => setPage(page() - 1)}>
-              &lt; prev
-            </button>
-            <p class="page-control-block">|</p>
-            <p class="current-page">page {page()}</p>
-            <p class="page-control-block">|</p>
-            <button
-              disabled={!hasNextPage()}
-              onClick={() => setPage(page() + 1)}
+
+      <div class="results-container">
+        <For each={titles()}>
+          {(title) => (
+            <div
+              class="title"
+              onClick={() => {
+                setCurrentTitle(title);
+                setMode(Mode.episode);
+                setSearchTerm("");
+                navigate(`/anime/${title._id}`);
+              }}
             >
-              next &gt;
-            </button>
-          </div>
-        </Show>
+              <img src={title.thumbnail} />
+              <h3 class="thumbnail-title">{title.englishName || title.name}</h3>
+            </div>
+          )}
+        </For>
+      </div>
+      <Show when={page() != 1 || hasNextPage()}>
+        <div class="page-control">
+          <button disabled={page() == 1} onClick={() => setPage(page() - 1)}>
+            <Icon name="chevron_left" />
+          </button>
+          <p class="page-control-block">|</p>
+          <p class="current-page">page {page()}</p>
+          <p class="page-control-block">|</p>
+          <button disabled={!hasNextPage()} onClick={() => setPage(page() + 1)}>
+            <Icon name="chevron_right" />
+          </button>
+        </div>
       </Show>
     </Show>
   );

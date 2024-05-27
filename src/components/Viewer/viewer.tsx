@@ -7,11 +7,13 @@ import "./viewer.scss";
 import { convertUrlsToProperLinks } from "../../api/decodeUrl";
 import { Video } from "../Video/video";
 import { getShow } from "../../api";
-import { ErrorPage } from "../Error/error";
 
 async function getUrls(episodeVariables: EpisodeVariables) {
   const { query, variables } = episodeQuery(episodeVariables);
   const { data } = await client.query(query, variables).toPromise();
+  if (!data.episode) {
+    throw new Error("No episodes found, please try another translation type.");
+  }
   return await convertUrlsToProperLinks(data.episode.sourceUrls);
 }
 
@@ -115,82 +117,70 @@ export function Viewer(param: { showId?: string }) {
     const episodes = currentTitle()!?.availableEpisodesDetail[lang()].sort(
       (a: any, b: any) => a - b
     );
-    if (
-      episodes?.includes(episodeNumber() as string) &&
-      currentTitle() != undefined
-    ) {
-      const selectedInfo: EpisodeVariables = {
-        showId: currentTitle()?._id || "",
-        episodeString: episodeNumber() || "1",
-        translationType: lang(),
-      };
-      try {
-        setIsLoading(true);
-        setUrls(await getUrls(selectedInfo));
-        setError("");
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
+
+    setIsLoading(true);
+    const selectedInfo: EpisodeVariables = {
+      showId: currentTitle()?._id || "",
+      episodeString: episodeNumber() || "1",
+      translationType: lang(),
+    };
+    try {
+      setUrls(await getUrls(selectedInfo));
+      setError("");
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   }, [episodeNumber, isDub, lang]);
 
   return (
     <Show when={mode() === Mode.episode}>
-      <Show when={!error()} fallback={<ErrorPage />}>
-        <div class="viewer-container">
-          <div class="controls">
-            <h1 class="show-title">
-              {currentTitle()?.englishName || currentTitle()?.name}
-            </h1>
+      <div class="viewer-container">
+        <div class="controls">
+          <h1 class="show-title">
+            {currentTitle()?.englishName || currentTitle()?.name}
+          </h1>
+          <div class="video-container">
             <Show when={!error()} fallback={<div class="error">{error()}</div>}>
-              <div class="video-container">
-                <Show when={!isLoading()} fallback={<div class="loader"></div>}>
-                  <Video poster={currentTitle()?.thumbnail} urls={urls} />
-                </Show>
-              </div>
-
-              <h2 class="episode-header">Episodes</h2>
-
-              <Toggle
-                options={["sub", "dub"]}
-                state={isDub}
-                setState={setIsDub}
-              />
-
-              <ul class="episode-list">
-                <Show
-                  when={
-                    currentTitle()?.availableEpisodesDetail[lang()].length != 0
-                  }
-                  fallback={<p class="error">nothing :{"("}</p>}
-                >
-                  <For
-                    each={currentTitle()?.availableEpisodesDetail[lang()].sort(
-                      (a: any, b: any) => a - b
-                    )}
-                  >
-                    {(episode) => (
-                      <li
-                        class={episodeNumber() == episode ? "selected" : ""}
-                        onClick={() => setEpisodeNumber(episode)}
-                      >
-                        {episode}
-                      </li>
-                    )}
-                  </For>
-                </Show>
-              </ul>
+              <Show when={!isLoading()} fallback={<div class="loader"></div>}>
+                <Video poster={currentTitle()?.thumbnail} urls={urls} />
+              </Show>
             </Show>
           </div>
-          <Show when={currentTitle()?.lastEpisodeTimestamp[lang()]}>
-            <footer class="last-modified">
-              Last episode posted on <br /> {lastModified()}
-            </footer>
-          </Show>
+
+          <h2 class="episode-header">Episodes</h2>
+
+          <Toggle options={["sub", "dub"]} state={isDub} setState={setIsDub} />
+
+          <ul class="episode-list">
+            <Show
+              when={currentTitle()?.availableEpisodesDetail[lang()].length != 0}
+              fallback={<p class="error">nothing :{"("}</p>}
+            >
+              <For
+                each={currentTitle()?.availableEpisodesDetail[lang()].sort(
+                  (a: any, b: any) => a - b
+                )}
+              >
+                {(episode) => (
+                  <li
+                    class={episodeNumber() == episode ? "selected" : ""}
+                    onClick={() => setEpisodeNumber(episode)}
+                  >
+                    {episode}
+                  </li>
+                )}
+              </For>
+            </Show>
+          </ul>
         </div>
-      </Show>
+        <Show when={currentTitle()?.lastEpisodeTimestamp[lang()]}>
+          <footer class="last-modified">
+            Last episode posted on <br /> {lastModified()}
+          </footer>
+        </Show>
+      </div>
     </Show>
   );
 }
