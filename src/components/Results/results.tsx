@@ -24,6 +24,10 @@ export function Results() {
   const [error, setError] = createSignal<string | null>(null);
   const navigate = useNavigate();
 
+  createEffect(() => {
+    console.log("paged");
+    setPage(1);
+  }, [searchTerm]);
   createEffect(async () => {
     // load titles
     setTitles([]);
@@ -31,7 +35,6 @@ export function Results() {
     if (searchTerm()?.trim() != "") {
       setIsLoading(true);
       setEpisodeNumber("1");
-      setPage(1);
       const { query, variables } = titlesQuery(`${searchTerm()}`, page());
       try {
         const { data: response } = await client
@@ -89,14 +92,14 @@ export function Results() {
       </div>
       <Show when={page() != 1 || hasNextPage()}>
         <div class="page-control">
-          <button disabled={page() == 1} onClick={() => setPage(page() - 1)}>
-            <Icon name="chevron_left" />
+          <button disabled={page() == 1}>
+            <Icon name="chevron_left" onClick={() => setPage(page() - 1)} />
           </button>
           <p class="page-control-block">|</p>
           <p class="current-page">page {page()}</p>
           <p class="page-control-block">|</p>
-          <button disabled={!hasNextPage()} onClick={() => setPage(page() + 1)}>
-            <Icon name="chevron_right" />
+          <button disabled={!hasNextPage()}>
+            <Icon name="chevron_right" onClick={() => setPage(page() + 1)} />
           </button>
         </div>
       </Show>

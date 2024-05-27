@@ -9,7 +9,7 @@ import "./search.scss";
 export function Search() {
   const [inputRef, setInputRef] = createSignal<HTMLInputElement | null>(null);
   const [isActive, setIsActive] = createSignal<boolean>(false);
-  const { mode, setMode, titles, setTitles, setSearchTerm } =
+  const { mode, setMode, titles, setTitles, setSearchTerm, currentTitle } =
     useContext(SettingsContext);
   let debounceTimeout: number | undefined;
   const navigate = useNavigate();
@@ -68,7 +68,7 @@ export function Search() {
           onInput={handleInputChange}
           placeholder="search"
           onFocus={() => {
-            setMode(mode() == Mode.none ? Mode.title : Mode.episode);
+            setMode(!currentTitle() ? Mode.title : Mode.episode);
             setIsActive(true);
             window.scrollTo(0, 0);
           }}

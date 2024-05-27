@@ -115,6 +115,7 @@ export function Viewer(param: { showId?: string }) {
   // request for episode sources
   createEffect(async () => {
     setIsLoading(true);
+    setError(null);
     const selectedInfo: EpisodeVariables = {
       showId: currentTitle()?._id || "",
       episodeString: episodeNumber() || "1",
