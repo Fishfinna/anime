@@ -3,9 +3,9 @@ import { SettingsContext } from "../../context/settingsContext";
 import { useNavigate } from "@solidjs/router";
 import { Mode } from "../../types/settings";
 import { client, titlesQuery } from "../../api";
+import { Icon } from "../Icons/icon";
 
 import "./results.scss";
-import { Icon } from "../Icons/icon";
 
 export function Results() {
   const {
@@ -25,14 +25,14 @@ export function Results() {
   const navigate = useNavigate();
 
   createEffect(() => {
-    console.log("paged");
     setPage(1);
   }, [searchTerm]);
+
   createEffect(async () => {
     // load titles
     setTitles([]);
     setError(null);
-    if (searchTerm()?.trim() != "") {
+    if (searchTerm()?.trim() != "" && searchTerm()) {
       setIsLoading(true);
       setEpisodeNumber("1");
       const { query, variables } = titlesQuery(`${searchTerm()}`, page());
@@ -41,6 +41,7 @@ export function Results() {
           .query(query, variables)
           .toPromise();
         if (response.shows.edges.length === 0) {
+          console.log(searchTerm());
           throw new Error("No search results.");
         }
         setTitles(response.shows.edges);
