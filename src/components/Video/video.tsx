@@ -10,9 +10,10 @@ interface VideoProps {
 
 export function Video({ poster, urls }: VideoProps) {
   let videoRef: HTMLVideoElement | null = null;
-  let player: any = null;
+  let player: any | null = null;
 
-  const isFocusableElement = (element: Element): boolean => {
+  const isFocusableElement = (element: Element | null): boolean => {
+    if (!element) return false;
     const focusableElements = ["INPUT", "TEXTAREA", "SELECT", "BUTTON"];
     return (
       focusableElements.includes(element.tagName) ||
@@ -39,11 +40,9 @@ export function Video({ poster, urls }: VideoProps) {
           ? player.exitFullscreen()
           : player.requestFullscreen();
         break;
-      case "esc":
+      case "Escape":
         e.preventDefault();
-        player.isFullscreen()
-          ? player.exitFullscreen()
-          : player.requestFullscreen();
+        if (player.isFullscreen()) player.exitFullscreen();
         break;
       case "ArrowUp":
         e.preventDefault();
@@ -65,6 +64,8 @@ export function Video({ poster, urls }: VideoProps) {
         e.preventDefault();
         player.muted(!player.muted());
         break;
+      default:
+        break;
     }
   };
 
@@ -75,7 +76,7 @@ export function Video({ poster, urls }: VideoProps) {
     player = videojs(videoRef, {
       html5: {
         hls: {
-          overrideNative: overrideNative,
+          overrideNative,
         },
         nativeVideoTracks: !overrideNative,
         nativeAudioTracks: !overrideNative,
@@ -86,13 +87,21 @@ export function Video({ poster, urls }: VideoProps) {
       preload: "auto",
       width: 800,
       height: 450,
+      controlBar: {
+        children: [
+          "playToggle",
+          "progressControl",
+          "volumePanel",
+          "qualitySelector",
+          "fullscreenToggle",
+        ],
+      },
     });
 
     document.addEventListener("keydown", handleKeyDown);
 
     onCleanup(() => {
       document.removeEventListener("keydown", handleKeyDown);
-      console.log("Player current time:", player.currentTime() / 60);
       if (player) {
         player.dispose();
       }
@@ -110,7 +119,7 @@ export function Video({ poster, urls }: VideoProps) {
           <source
             src={url.link}
             type={
-              url.link.endsWith("m3u8") ? "application/x-mpegURL" : "video/mp4"
+              url.link.endsWith(".m3u8") ? "application/x-mpegURL" : "video/mp4"
             }
           />
         )}
