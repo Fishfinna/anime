@@ -2,9 +2,10 @@ import "./start-buttons.scss";
 
 export function StartButtons() {
   return (
-    <>
-      <button>New</button>
-      <button>Popular</button>
-    </>
+    <div class="start-buttons">
+      <button>popular</button>
+      <button>new</button>
+      <button>random</button>
+    </div>
   );
 }

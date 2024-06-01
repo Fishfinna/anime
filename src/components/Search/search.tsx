@@ -1,8 +1,9 @@
-import { createSignal, onCleanup, useContext } from "solid-js";
+import { Show, createSignal, onCleanup, useContext } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import { SettingsContext } from "../../context/settingsContext";
 import { Mode } from "../../types/settings";
 import { Icon } from "../Icons/icon";
+import { StartButtons } from "../StartButtons/start-buttons";
 
 import "./search.scss";
 
@@ -75,6 +76,9 @@ export function Search() {
           onBlur={() => setIsActive(!!titles().length)}
         ></input>
       </form>
+      <Show when={mode() === Mode.none}>
+        <StartButtons />
+      </Show>
     </div>
   );
 }
