@@ -1,5 +1,11 @@
 import "./start-buttons.scss";
 
+function findPopular() {}
+
+function findNew() {}
+
+function findRandom() {}
+
 export function StartButtons() {
   return (
     <div class="start-buttons">
