@@ -1,7 +1,7 @@
 import { Show, createSignal, onCleanup, useContext } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import { SettingsContext } from "../../context/settingsContext";
-import { Mode } from "../../types/settings";
+import { Mode, SearchType } from "../../types/settings";
 import { Icon } from "../Icons/icon";
 import { StartButtons } from "../StartButtons/start-buttons";
 
@@ -10,8 +10,15 @@ import "./search.scss";
 export function Search() {
   const [inputRef, setInputRef] = createSignal<HTMLInputElement | null>(null);
   const [isActive, setIsActive] = createSignal<boolean>(false);
-  const { mode, setMode, titles, setTitles, setSearchTerm, currentTitle } =
-    useContext(SettingsContext);
+  const {
+    mode,
+    setMode,
+    titles,
+    setTitles,
+    setSearchTerm,
+    currentTitle,
+    setSearchType,
+  } = useContext(SettingsContext);
   let debounceTimeout: number | undefined;
   const navigate = useNavigate();
 
@@ -19,6 +26,7 @@ export function Search() {
     event.preventDefault();
     setSearchTerm(inputRef()!.value);
     setTitles([]);
+    setSearchType(SearchType.text);
   }
 
   function handleInputChange() {

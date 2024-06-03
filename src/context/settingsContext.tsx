@@ -1,6 +1,6 @@
 import { Context, createContext, createSignal, createEffect } from "solid-js";
 import { Title } from "../types/titles";
-import { Mode, Settings } from "../types/settings";
+import { Mode, SearchType, Settings } from "../types/settings";
 
 export const SettingsContext = createContext() as Context<Settings>;
 
@@ -12,6 +12,7 @@ export function SettingsProvider(props: { children: any }) {
   const [episodeNumber, setEpisodeNumber] = createSignal<string | undefined>();
   // searching
   const [searchTerm, setSearchTerm] = createSignal<string | undefined>();
+  const [searchType, setSearchType] = createSignal<SearchType | undefined>();
 
   const updateLocalStorage = (settings: any) => {
     localStorage.setItem("settings", JSON.stringify(settings));
@@ -59,6 +60,8 @@ export function SettingsProvider(props: { children: any }) {
         setEpisodeNumber,
         searchTerm,
         setSearchTerm,
+        searchType,
+        setSearchType,
       }}
     >
       {props.children}

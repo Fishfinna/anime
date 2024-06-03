@@ -1,7 +1,7 @@
 import { For, Show, createEffect, createSignal, useContext } from "solid-js";
 import { SettingsContext } from "../../context/settingsContext";
 import { useNavigate } from "@solidjs/router";
-import { Mode } from "../../types/settings";
+import { Mode, SearchType } from "../../types/settings";
 import { client, titlesQuery } from "../../api";
 import { Icon } from "../Icons/icon";
 
@@ -17,6 +17,7 @@ export function Results() {
     searchTerm,
     setSearchTerm,
     setEpisodeNumber,
+    searchType,
   } = useContext(SettingsContext);
   const [page, setPage] = createSignal<number>(1);
   const [hasNextPage, setHasNextPage] = createSignal<boolean>(false);
@@ -32,36 +33,48 @@ export function Results() {
     // load titles
     setTitles([]);
     setError(null);
-    if (searchTerm()?.trim() != "" && searchTerm()) {
-      setIsLoading(true);
-      setEpisodeNumber("1");
-      const { query, variables } = titlesQuery(`${searchTerm()}`, page());
-      try {
-        const { data: response } = await client
-          .query(query, variables)
-          .toPromise();
-        if (response.shows.edges.length === 0) {
-          console.log(searchTerm());
-          throw new Error("No search results.");
+    if (searchType() == SearchType.text) {
+      if (searchTerm()?.trim() != "" && searchTerm()) {
+        setIsLoading(true);
+        setEpisodeNumber("1");
+        const { query, variables } = titlesQuery(`${searchTerm()}`, page());
+        try {
+          const { data: response } = await client
+            .query(query, variables)
+            .toPromise();
+          if (response.shows.edges.length === 0) {
+            throw new Error("No search results.");
+          }
+          setTitles(response.shows.edges);
+          setCurrentTitle(undefined);
+          setMode(Mode.title);
+          setError(null);
+        } catch (err: any) {
+          setError(err.message);
+        } finally {
+          setIsLoading(false);
         }
-        setTitles(response.shows.edges);
-        setCurrentTitle(undefined);
-        setMode(Mode.title);
+        // for navigation
+        const { query: navQuery, variables: navVar } = titlesQuery(
+          `${searchTerm()}`,
+          page() + 1
+        );
+        const { data } = await client.query(navQuery, navVar).toPromise();
+        setHasNextPage(data.shows.edges.length !== 0);
+      } else if (!searchTerm()) {
         setError(null);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
+        if (mode() == Mode.title) setMode(Mode.none);
       }
-    } else {
-      setError(null);
-      if (mode() == Mode.title) setMode(Mode.none);
+    } else if (searchType() == SearchType.popular) {
+      console.log("popular");
+      setHasNextPage(false);
+    } else if (searchType() == SearchType.new) {
+      console.log("new");
+      setHasNextPage(false);
+    } else if (searchType() == SearchType.random) {
+      console.log("random");
+      setHasNextPage(false);
     }
-
-    // for navigation
-    const { query, variables } = titlesQuery(`${searchTerm()}`, page() + 1);
-    const { data } = await client.query(query, variables).toPromise();
-    setHasNextPage(data.shows.edges.length !== 0);
   }, [page]);
 
   return (

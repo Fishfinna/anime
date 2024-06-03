@@ -42,6 +42,41 @@ export function titlesQuery(query: string, page: number = 1) {
   };
 }
 
+export function popular(page: number = 1) {
+  return {
+    query: gql`
+      query SearchAnime(
+        $limit: Int
+        $page: Int
+        $countryOrigin: VaildCountryOriginEnumType
+      ) {
+        shows(
+          search: { sortBy: Top }
+          limit: $limit
+          page: $page
+          countryOrigin: $countryOrigin
+        ) {
+          edges {
+            _id
+            englishName
+            name
+            thumbnail
+            __typename
+            availableEpisodesDetail
+            lastEpisodeTimestamp
+          }
+        }
+      }
+    `,
+    variables: {
+      search: { allowAdult: false, allowUnknown: false },
+      limit: 6,
+      page: page,
+      countryOrigin: "ALL",
+    },
+  };
+}
+
 export function episodeQuery(episodeVariables: EpisodeVariables) {
   return {
     query: gql`

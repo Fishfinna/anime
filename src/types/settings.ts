@@ -14,10 +14,19 @@ export interface Settings {
   setEpisodeNumber: (arg: string) => void;
   searchTerm: Accessor<string | undefined>;
   setSearchTerm: (arg: string) => void;
+  searchType: Accessor<SearchType | undefined>;
+  setSearchType: (arg: SearchType) => void;
 }
 
 export enum Mode {
   none = "none",
   title = "title",
   episode = "episode",
+}
+
+export enum SearchType {
+  text = "text",
+  popular = "popular",
+  new = "new",
+  random = "random",
 }
