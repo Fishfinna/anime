@@ -6,7 +6,7 @@ export interface EpisodeVariables {
   translationType: string;
 }
 
-export function titlesQuery(query: string, page: number = 1) {
+export function searchQuery(query: string, page: number = 1) {
   return {
     query: gql`
       query SearchAnime(
@@ -42,7 +42,7 @@ export function titlesQuery(query: string, page: number = 1) {
   };
 }
 
-export function popular(page: number = 1) {
+export function popularQuery(page: number = 1) {
   return {
     query: gql`
       query SearchAnime(
@@ -74,6 +74,20 @@ export function popular(page: number = 1) {
       page: page,
       countryOrigin: "ALL",
     },
+  };
+}
+
+export function newQuery(page: number = 1) {
+  return {
+    query: gql``,
+    variables: {},
+  };
+}
+
+export function randomQuery(page: number = 1) {
+  return {
+    query: gql``,
+    variables: {},
   };
 }
 

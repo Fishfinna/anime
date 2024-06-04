@@ -1,8 +1,21 @@
-import { For, Show, createEffect, createSignal, useContext } from "solid-js";
+import {
+  For,
+  Show,
+  createEffect,
+  createSignal,
+  onMount,
+  useContext,
+} from "solid-js";
 import { SettingsContext } from "../../context/settingsContext";
 import { useNavigate } from "@solidjs/router";
 import { Mode, SearchType } from "../../types/settings";
-import { client, titlesQuery } from "../../api";
+import {
+  client,
+  searchQuery,
+  newQuery,
+  randomQuery,
+  popularQuery,
+} from "../../api";
 import { Icon } from "../Icons/icon";
 
 import "./results.scss";
@@ -25,8 +38,16 @@ export function Results() {
   const [error, setError] = createSignal<string | null>(null);
   const navigate = useNavigate();
 
-  createEffect(() => {
+  onMount(() => {
     setPage(1);
+    setHasNextPage(false);
+  });
+
+  createEffect(async () => {
+    if (searchTerm()) {
+      setPage(1);
+      setHasNextPage(false);
+    }
   }, [searchTerm]);
 
   createEffect(async () => {
@@ -37,7 +58,7 @@ export function Results() {
       if (searchTerm()?.trim() != "" && searchTerm()) {
         setIsLoading(true);
         setEpisodeNumber("1");
-        const { query, variables } = titlesQuery(`${searchTerm()}`, page());
+        const { query, variables } = searchQuery(`${searchTerm()}`, page());
         try {
           const { data: response } = await client
             .query(query, variables)
@@ -55,7 +76,7 @@ export function Results() {
           setIsLoading(false);
         }
         // for navigation
-        const { query: navQuery, variables: navVar } = titlesQuery(
+        const { query: navQuery, variables: navVar } = searchQuery(
           `${searchTerm()}`,
           page() + 1
         );
@@ -67,7 +88,10 @@ export function Results() {
       }
     } else if (searchType() == SearchType.popular) {
       console.log("popular");
-      setHasNextPage(false);
+      const { query, variables } = await popularQuery();
+      try {
+        const { data } = await client.query(query, variables).toPromise();
+      } catch {}
     } else if (searchType() == SearchType.new) {
       console.log("new");
       setHasNextPage(false);

@@ -18,6 +18,7 @@ export function Search() {
     setSearchTerm,
     currentTitle,
     setSearchType,
+    setCurrentTitle,
   } = useContext(SettingsContext);
   let debounceTimeout: number | undefined;
   const navigate = useNavigate();
@@ -54,15 +55,16 @@ export function Search() {
         name="emoji_food_beverage"
         className="main-icon"
         onClick={() => {
-          setMode(Mode.none);
-          setIsActive(false);
           navigate("/anime");
+          setMode(Mode.none);
+          setCurrentTitle(undefined);
+          setIsActive(false);
         }}
         style={{ "font-size": "100px", color: "#4e4e4f" }}
       />
 
       <form class="search-form" onSubmit={submitSearch}>
-        <button type="submit" class="search-btn" onClick={handleInputChange}>
+        <button type="submit" class="search-btn" onClick={submitSearch}>
           <Icon
             name="search"
             style={{

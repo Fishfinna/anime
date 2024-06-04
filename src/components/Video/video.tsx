@@ -87,15 +87,6 @@ export function Video({ poster, urls }: VideoProps) {
       preload: "auto",
       width: 800,
       height: 450,
-      controlBar: {
-        children: [
-          "playToggle",
-          "progressControl",
-          "volumePanel",
-          "qualitySelector",
-          "fullscreenToggle",
-        ],
-      },
     });
 
     document.addEventListener("keydown", handleKeyDown);

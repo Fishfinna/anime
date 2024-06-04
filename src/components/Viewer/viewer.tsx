@@ -19,7 +19,7 @@ async function getUrls(episodeVariables: EpisodeVariables) {
   const { query, variables } = episodeQuery(episodeVariables);
   const { data } = await client.query(query, variables).toPromise();
   if (!data.episode?.sourceUrls) {
-    throw new Error("No episodes found, please try another translation type.");
+    throw new Error("nothing here :(");
   }
   return await convertUrlsToProperLinks(data.episode.sourceUrls);
 }
@@ -63,8 +63,9 @@ export function Viewer(param: { showId?: string }) {
     return () => {};
   }, [isDub, currentTitle]);
 
-  // handle the episode number
-  createEffect(() => {
+  // request for episode sources
+  createEffect(async () => {
+    // handle the episode numbers
     const episodes = currentTitle()!?.availableEpisodesDetail[lang()].sort(
       (a: any, b: any) => a - b
     );
@@ -82,11 +83,6 @@ export function Viewer(param: { showId?: string }) {
       }
     }
 
-    return () => {};
-  }, [isDub]);
-
-  // request for episode sources
-  createEffect(async () => {
     setIsLoading(true);
     setError("");
     const selectedInfo: EpisodeVariables = {
@@ -95,8 +91,8 @@ export function Viewer(param: { showId?: string }) {
       translationType: lang(),
     };
     try {
-      setUrls(await getUrls(selectedInfo));
       setError("");
+      setUrls(await getUrls(selectedInfo));
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -166,7 +162,6 @@ export function Viewer(param: { showId?: string }) {
           <ul class="episode-list">
             <Show
               when={currentTitle()?.availableEpisodesDetail[lang()].length != 0}
-              fallback={<p class="error">nothing :{"("}</p>}
             >
               <For
                 each={currentTitle()?.availableEpisodesDetail[lang()].sort(
