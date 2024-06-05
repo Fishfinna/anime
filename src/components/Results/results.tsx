@@ -38,6 +38,28 @@ export function Results() {
   const [error, setError] = createSignal<string | null>(null);
   const navigate = useNavigate();
 
+  async function search(searchFunction: any, searchQuery?: string) {
+    setIsLoading(true);
+    setEpisodeNumber("1");
+    const { query, variables } = searchQuery
+      ? searchFunction(searchQuery, page())
+      : searchFunction(page());
+    try {
+      const { data } = await client.query(query, variables).toPromise();
+      if (data.shows.edges.length === 0) {
+        throw new Error("No search results.");
+      }
+      setTitles(data.shows.edges);
+      setCurrentTitle(undefined);
+      setMode(Mode.title);
+      setError(null);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   onMount(() => {
     setPage(1);
     setHasNextPage(false);
@@ -55,6 +77,7 @@ export function Results() {
     setTitles([]);
     setError(null);
     if (searchType() == SearchType.text) {
+      // TODO refactor
       if (searchTerm()?.trim() != "" && searchTerm()) {
         setIsLoading(true);
         setEpisodeNumber("1");
