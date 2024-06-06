@@ -1,4 +1,5 @@
 import { gql } from "@urql/core";
+export const limit = 6;
 
 export interface EpisodeVariables {
   showId: string;
@@ -35,8 +36,8 @@ export function searchQuery(query: string, page: number = 1) {
     `,
     variables: {
       search: { allowAdult: false, allowUnknown: false, query },
-      limit: 6,
-      page: page,
+      limit: limit + 1,
+      page,
       countryOrigin: "ALL",
     },
   };
@@ -70,8 +71,8 @@ export function popularQuery(page: number = 1) {
     `,
     variables: {
       search: { allowAdult: false, allowUnknown: false },
-      limit: 6,
-      page: page,
+      limit: limit + 1,
+      page,
       countryOrigin: "ALL",
     },
   };

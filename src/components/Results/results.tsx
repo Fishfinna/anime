@@ -10,6 +10,7 @@ import { SettingsContext } from "../../context/settingsContext";
 import { useNavigate } from "@solidjs/router";
 import { Mode, SearchType } from "../../types/settings";
 import {
+  limit,
   client,
   searchQuery,
   newQuery,
@@ -38,18 +39,21 @@ export function Results() {
   const [error, setError] = createSignal<string | null>(null);
   const navigate = useNavigate();
 
-  async function search(searchFunction: any, searchQuery?: string) {
+  async function performSearch(searchFunction: any, searchText?: string) {
     setIsLoading(true);
     setEpisodeNumber("1");
-    const { query, variables } = searchQuery
-      ? searchFunction(searchQuery, page())
+    setHasNextPage(false);
+    const { query, variables } = searchText
+      ? searchFunction(searchText, page())
       : searchFunction(page());
     try {
       const { data } = await client.query(query, variables).toPromise();
       if (data.shows.edges.length === 0) {
         throw new Error("No search results.");
       }
-      setTitles(data.shows.edges);
+
+      setHasNextPage(data.shows.edges.length > limit);
+      setTitles(data.shows.edges.slice(0, -1));
       setCurrentTitle(undefined);
       setMode(Mode.title);
       setError(null);
@@ -77,44 +81,14 @@ export function Results() {
     setTitles([]);
     setError(null);
     if (searchType() == SearchType.text) {
-      // TODO refactor
       if (searchTerm()?.trim() != "" && searchTerm()) {
-        setIsLoading(true);
-        setEpisodeNumber("1");
-        const { query, variables } = searchQuery(`${searchTerm()}`, page());
-        try {
-          const { data: response } = await client
-            .query(query, variables)
-            .toPromise();
-          if (response.shows.edges.length === 0) {
-            throw new Error("No search results.");
-          }
-          setTitles(response.shows.edges);
-          setCurrentTitle(undefined);
-          setMode(Mode.title);
-          setError(null);
-        } catch (err: any) {
-          setError(err.message);
-        } finally {
-          setIsLoading(false);
-        }
-        // for navigation
-        const { query: navQuery, variables: navVar } = searchQuery(
-          `${searchTerm()}`,
-          page() + 1
-        );
-        const { data } = await client.query(navQuery, navVar).toPromise();
-        setHasNextPage(data.shows.edges.length !== 0);
+        performSearch(searchQuery, searchTerm());
       } else if (!searchTerm()) {
         setError(null);
         if (mode() == Mode.title) setMode(Mode.none);
       }
     } else if (searchType() == SearchType.popular) {
-      console.log("popular");
-      const { query, variables } = await popularQuery();
-      try {
-        const { data } = await client.query(query, variables).toPromise();
-      } catch {}
+      performSearch(popularQuery);
     } else if (searchType() == SearchType.new) {
       console.log("new");
       setHasNextPage(false);
