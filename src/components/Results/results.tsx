@@ -90,11 +90,9 @@ export function Results() {
     } else if (searchType() == SearchType.popular) {
       performSearch(popularQuery);
     } else if (searchType() == SearchType.new) {
-      console.log("new");
-      setHasNextPage(false);
+      performSearch(newQuery);
     } else if (searchType() == SearchType.random) {
-      console.log("random");
-      setHasNextPage(false);
+      performSearch(randomQuery);
     }
   }, [page]);
 
