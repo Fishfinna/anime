@@ -28,7 +28,8 @@ export function StartButtons() {
     <div class="start-buttons">
       <button onClick={findPopular}>popular</button>
       <button onClick={findNew}>new</button>
-      <button onClick={findRandom}>random</button>
+      {/* TODO: random */}
+      {/* <button onClick={findRandom}>random</button> */}
     </div>
   );
 }

@@ -15,15 +15,6 @@ import { convertUrlsToProperLinks } from "../../api/decodeUrl";
 import { Video } from "../Video/video";
 import { getShow } from "../../api";
 
-async function getUrls(episodeVariables: EpisodeVariables) {
-  const { query, variables } = episodeQuery(episodeVariables);
-  const { data } = await client.query(query, variables).toPromise();
-  if (!data.episode?.sourceUrls) {
-    throw new Error("nothing here :(");
-  }
-  return await convertUrlsToProperLinks(data.episode.sourceUrls);
-}
-
 export function Viewer(param: { showId?: string }) {
   const {
     mode,
@@ -41,6 +32,17 @@ export function Viewer(param: { showId?: string }) {
   const [isLoading, setIsLoading] = createSignal<boolean>(false);
   const [urls, setUrls] = createSignal<url[]>([]);
   const dateOffset = 1000;
+
+  async function getUrls(episodeVariables: EpisodeVariables) {
+    const { query, variables } = episodeQuery(episodeVariables);
+    const { data } = await client.query(query, variables).toPromise();
+    if (!data.episode?.sourceUrls) {
+      throw new Error(
+        isDub() ? `nothing here :( \ntry watching in sub` : "nothing here :(\n"
+      );
+    }
+    return await convertUrlsToProperLinks(data.episode.sourceUrls);
+  }
 
   // handle date modified
   createEffect(() => {
@@ -104,10 +106,10 @@ export function Viewer(param: { showId?: string }) {
   onMount(async () => {
     if (param.showId || currentTitle()?._id) {
       let showId: string;
-      if (param.showId) {
-        showId = param.showId;
-      } else {
+      if (currentTitle()?._id) {
         showId = currentTitle()?._id as string;
+      } else {
+        showId = param.showId as string;
       }
       setMode(Mode.episode);
       setIsLoading(true);
@@ -121,6 +123,7 @@ export function Viewer(param: { showId?: string }) {
           throw new Error("No search results.");
         }
         setCurrentTitle(showData);
+        console.log({ mode: mode(), currentTitle: currentTitle() });
         setUrls(
           await getUrls({
             showId: currentTitle()?._id || "",
@@ -134,10 +137,11 @@ export function Viewer(param: { showId?: string }) {
         setIsLoading(false);
       }
     }
-
+    console.log({ mode: mode(), currentTitle: currentTitle() });
     if (!currentTitle()) {
       setMode(Mode.none);
     }
+    console.log({ mode: mode() });
   });
 
   return (
@@ -148,7 +152,7 @@ export function Viewer(param: { showId?: string }) {
             {currentTitle()?.englishName || currentTitle()?.name}
           </h1>
           <div class="video-container">
-            <Show when={!error()} fallback={<div class="error">{error()}</div>}>
+            <Show when={!error()} fallback={<pre class="error">{error()}</pre>}>
               <Show when={!isLoading()} fallback={<div class="loader"></div>}>
                 <Video poster={currentTitle()?.thumbnail} urls={urls} />
               </Show>

@@ -80,7 +80,30 @@ export function popularQuery(page: number = 1) {
 
 export function newQuery(page: number = 1) {
   return {
-    query: gql``,
+    query: gql`
+      query SearchAnime(
+        $limit: Int
+        $page: Int
+        $countryOrigin: VaildCountryOriginEnumType
+      ) {
+        shows(
+          search: { sortBy: Recent }
+          limit: $limit
+          page: $page
+          countryOrigin: $countryOrigin
+        ) {
+          edges {
+            _id
+            englishName
+            name
+            thumbnail
+            __typename
+            availableEpisodesDetail
+            lastEpisodeTimestamp
+          }
+        }
+      }
+    `,
     variables: {
       search: { allowAdult: false, allowUnknown: false },
       limit: limit + 1,

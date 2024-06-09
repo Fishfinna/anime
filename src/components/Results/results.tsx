@@ -27,6 +27,7 @@ export function Results() {
     setMode,
     titles,
     setTitles,
+    currentTitle,
     setCurrentTitle,
     searchTerm,
     setSearchTerm,
@@ -51,7 +52,6 @@ export function Results() {
       if (data.shows.edges.length === 0) {
         throw new Error("No search results.");
       }
-
       setHasNextPage(data.shows.edges.length > limit);
       setTitles(data.shows.edges.slice(0, -1));
       setCurrentTitle(undefined);
@@ -114,7 +114,6 @@ export function Results() {
                 setCurrentTitle(title);
                 setMode(Mode.episode);
                 setSearchTerm("");
-                navigate(`/anime/${title._id}`);
               }}
             >
               <img src={title.thumbnail} />
