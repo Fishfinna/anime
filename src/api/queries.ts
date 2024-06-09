@@ -81,14 +81,24 @@ export function popularQuery(page: number = 1) {
 export function newQuery(page: number = 1) {
   return {
     query: gql``,
-    variables: {},
+    variables: {
+      search: { allowAdult: false, allowUnknown: false },
+      limit: limit + 1,
+      page,
+      countryOrigin: "ALL",
+    },
   };
 }
 
 export function randomQuery(page: number = 1) {
   return {
     query: gql``,
-    variables: {},
+    variables: {
+      search: { allowAdult: false, allowUnknown: false },
+      limit: limit + 1,
+      page,
+      countryOrigin: "ALL",
+    },
   };
 }
 
