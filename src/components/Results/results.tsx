@@ -27,10 +27,8 @@ export function Results() {
     setMode,
     titles,
     setTitles,
-    currentTitle,
     setCurrentTitle,
     searchTerm,
-    setSearchTerm,
     setEpisodeNumber,
     searchType,
   } = useContext(SettingsContext);
@@ -41,9 +39,12 @@ export function Results() {
   const navigate = useNavigate();
 
   async function performSearch(searchFunction: any, searchText?: string) {
+    console.log("here");
     setIsLoading(true);
     setEpisodeNumber("1");
     setHasNextPage(false);
+    setCurrentTitle(undefined);
+    setMode(Mode.title);
     const { query, variables } = searchText
       ? searchFunction(searchText, page())
       : searchFunction(page());
@@ -54,8 +55,6 @@ export function Results() {
       }
       setHasNextPage(data.shows.edges.length > limit);
       setTitles(data.shows.edges.slice(0, -1));
-      setCurrentTitle(undefined);
-      setMode(Mode.title);
       setError(null);
     } catch (err: any) {
       setError(err.message);
@@ -64,37 +63,28 @@ export function Results() {
     }
   }
 
-  onMount(() => {
-    setPage(1);
-    setHasNextPage(false);
-  });
-
   createEffect(async () => {
-    if (searchTerm()) {
-      setPage(1);
-      setHasNextPage(false);
-    }
-  }, [searchTerm]);
-
-  createEffect(async () => {
-    // load titles
-    setTitles([]);
-    setError(null);
-    if (searchType() == SearchType.text) {
-      if (searchTerm()?.trim() != "" && searchTerm()) {
-        performSearch(searchQuery, searchTerm());
-      } else if (!searchTerm()) {
-        setError(null);
-        if (mode() == Mode.title) setMode(Mode.none);
+    if (mode() == Mode.title) {
+      // load titles
+      setTitles([]);
+      setError(null);
+      console.log("search");
+      if (searchType() == SearchType.text) {
+        if (searchTerm()?.trim() != "" && searchTerm()) {
+          performSearch(searchQuery, searchTerm());
+        } else if (!searchTerm()) {
+          setError(null);
+          if (mode() == Mode.title) setMode(Mode.none);
+        }
+      } else if (searchType() == SearchType.popular) {
+        performSearch(popularQuery);
+      } else if (searchType() == SearchType.new) {
+        performSearch(newQuery);
+      } else if (searchType() == SearchType.random) {
+        performSearch(randomQuery);
       }
-    } else if (searchType() == SearchType.popular) {
-      performSearch(popularQuery);
-    } else if (searchType() == SearchType.new) {
-      performSearch(newQuery);
-    } else if (searchType() == SearchType.random) {
-      performSearch(randomQuery);
     }
-  }, [page]);
+  }, [searchType, searchTerm]);
 
   return (
     <Show when={mode() === Mode.title}>
@@ -110,10 +100,11 @@ export function Results() {
           {(title) => (
             <div
               class="title"
-              onClick={() => {
+              onClick={(event) => {
+                event.preventDefault();
                 setCurrentTitle(title);
                 setMode(Mode.episode);
-                setSearchTerm("");
+                navigate(`/anime/${title._id}`);
               }}
             >
               <img src={title.thumbnail} />

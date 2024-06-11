@@ -84,7 +84,6 @@ export function Viewer(param: { showId?: string }) {
         setEpisodeNumber("1");
       }
     }
-
     setIsLoading(true);
     setError("");
     const selectedInfo: EpisodeVariables = {
@@ -104,12 +103,13 @@ export function Viewer(param: { showId?: string }) {
 
   // reload the content when the page reloads
   onMount(async () => {
+    setError(undefined);
     if (param.showId || currentTitle()?._id) {
       let showId: string;
-      if (currentTitle()?._id) {
-        showId = currentTitle()?._id as string;
+      if (param.showId) {
+        showId = param.showId;
       } else {
-        showId = param.showId as string;
+        showId = currentTitle()?._id as string;
       }
       setMode(Mode.episode);
       setIsLoading(true);
@@ -123,7 +123,6 @@ export function Viewer(param: { showId?: string }) {
           throw new Error("No search results.");
         }
         setCurrentTitle(showData);
-        console.log({ mode: mode(), currentTitle: currentTitle() });
         setUrls(
           await getUrls({
             showId: currentTitle()?._id || "",
@@ -132,16 +131,15 @@ export function Viewer(param: { showId?: string }) {
           })
         );
       } catch (err: any) {
+        console.log("here");
         setError(err.message);
       } finally {
         setIsLoading(false);
       }
     }
-    console.log({ mode: mode(), currentTitle: currentTitle() });
     if (!currentTitle()) {
       setMode(Mode.none);
     }
-    console.log({ mode: mode() });
   });
 
   return (
