@@ -63,6 +63,10 @@ export function Results() {
     }
   }
 
+  onMount(() => {
+    setPage(1);
+  });
+
   createEffect(async () => {
     if (mode() == Mode.title) {
       // load titles
