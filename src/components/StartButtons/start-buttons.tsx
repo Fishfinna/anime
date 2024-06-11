@@ -4,7 +4,7 @@ import { useContext } from "solid-js";
 import { Mode, SearchType } from "../../types/settings";
 
 export function StartButtons() {
-  const { setMode, mode, setSearchType } = useContext(SettingsContext);
+  const { setMode, setSearchType } = useContext(SettingsContext);
 
   function findPopular(event: Event) {
     event.preventDefault();
@@ -18,11 +18,11 @@ export function StartButtons() {
     setMode(Mode.title);
   }
 
-  function findRandom(event: Event) {
-    event.preventDefault();
-    setSearchType(SearchType.random);
-    setMode(Mode.title);
-  }
+  // function findRandom(event: Event) {
+  //   event.preventDefault();
+  //   setSearchType(SearchType.random);
+  //   setMode(Mode.title);
+  // }
 
   return (
     <div class="start-buttons">
