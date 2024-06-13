@@ -26,6 +26,7 @@ export function Search() {
   async function submitSearch(event: Event) {
     event.preventDefault();
     setSearchTerm(inputRef()!.value);
+    setMode(Mode.title);
     setTitles([]);
     setSearchType(SearchType.text);
   }
@@ -83,7 +84,12 @@ export function Search() {
             setIsActive(true);
             window.scrollTo(0, 0);
           }}
-          onBlur={() => setIsActive(!!titles().length)}
+          onBlur={() => {
+            setIsActive(!!titles().length);
+            if (!inputRef()?.value && !titles().length) {
+              setMode(Mode.none);
+            }
+          }}
         ></input>
       </form>
       <Show when={mode() === Mode.none}>

@@ -4,6 +4,7 @@ import {
   createEffect,
   createSignal,
   onMount,
+  onCleanup,
   useContext,
 } from "solid-js";
 import { SettingsContext } from "../../context/settingsContext";
@@ -39,7 +40,6 @@ export function Results() {
   const navigate = useNavigate();
 
   async function performSearch(searchFunction: any, searchText?: string) {
-    console.log("here");
     setIsLoading(true);
     setEpisodeNumber("1");
     setHasNextPage(false);
@@ -67,12 +67,19 @@ export function Results() {
     setPage(1);
   });
 
+  onCleanup(() => {
+    setPage(1);
+  });
+
   createEffect(async () => {
+    // dependencies
+    searchType();
+    searchTerm();
+
     if (mode() == Mode.title) {
       // load titles
       setTitles([]);
       setError(null);
-      console.log("search");
       if (searchType() == SearchType.text) {
         if (searchTerm()?.trim() != "" && searchTerm()) {
           performSearch(searchQuery, searchTerm());
@@ -89,6 +96,13 @@ export function Results() {
       }
     }
   }, [searchType, searchTerm]);
+
+  createEffect(() => {
+    // dependencies
+    searchTerm();
+
+    setPage(1);
+  }, [searchTerm]);
 
   return (
     <Show when={mode() === Mode.title}>
