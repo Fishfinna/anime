@@ -11,7 +11,7 @@ import { SettingsContext } from "../../context/settingsContext";
 import { useNavigate } from "@solidjs/router";
 import { Mode, SearchType } from "../../types/settings";
 import {
-  limit,
+  defaultLimit,
   client,
   searchQuery,
   newQuery,
@@ -21,6 +21,7 @@ import {
 import { Icon } from "../Icons/icon";
 
 import "./results.scss";
+import { Title } from "../../types/titles";
 
 export function Results() {
   const {
@@ -39,6 +40,13 @@ export function Results() {
   const [error, setError] = createSignal<string | null>(null);
   const navigate = useNavigate();
 
+  async function getNextPage(query: any, variables: any): Promise<boolean> {
+    const validationVars = variables;
+    validationVars.page++;
+    const { data } = await client.query(query, validationVars).toPromise();
+    return data.shows.edges.length !== 0;
+  }
+
   async function performSearch(searchFunction: any, searchText?: string) {
     setIsLoading(true);
     setEpisodeNumber("1");
@@ -53,8 +61,10 @@ export function Results() {
       if (data.shows.edges.length === 0) {
         throw new Error("No search results.");
       }
-      setHasNextPage(data.shows.edges.length > limit);
-      setTitles(data.shows.edges.slice(0, -1));
+      if (data.shows.edges.length >= 6) {
+        setHasNextPage(await getNextPage(query, variables));
+      }
+      setTitles(data.shows.edges);
       setError(null);
     } catch (err: any) {
       setError(err.message);

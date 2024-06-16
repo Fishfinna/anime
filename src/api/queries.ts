@@ -1,5 +1,4 @@
 import { gql } from "@urql/core";
-export const limit = 6;
 
 export interface EpisodeVariables {
   showId: string;
@@ -7,7 +6,11 @@ export interface EpisodeVariables {
   translationType: string;
 }
 
-export function searchQuery(query: string, page: number = 1) {
+export function searchQuery(
+  query: string,
+  page: number = 1,
+  limit: number = 6
+) {
   return {
     query: gql`
       query SearchAnime(
@@ -36,7 +39,7 @@ export function searchQuery(query: string, page: number = 1) {
     `,
     variables: {
       search: { allowAdult: false, allowUnknown: false, query },
-      limit: limit + 1,
+      limit,
       page,
       countryOrigin: "ALL",
     },

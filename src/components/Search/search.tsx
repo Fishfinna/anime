@@ -16,7 +16,6 @@ export function Search() {
     titles,
     setTitles,
     setSearchTerm,
-    currentTitle,
     setSearchType,
     setCurrentTitle,
   } = useContext(SettingsContext);
@@ -80,7 +79,6 @@ export function Search() {
           onInput={handleInputChange}
           placeholder="search"
           onFocus={() => {
-            setMode(!currentTitle() ? Mode.title : Mode.episode);
             setIsActive(true);
             window.scrollTo(0, 0);
           }}
