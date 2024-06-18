@@ -1,5 +1,7 @@
 import { gql } from "@urql/core";
 
+const defaultLimit = 6;
+
 export interface EpisodeVariables {
   showId: string;
   episodeString: string;
@@ -9,7 +11,7 @@ export interface EpisodeVariables {
 export function searchQuery(
   query: string,
   page: number = 1,
-  limit: number = 6
+  limit: number = defaultLimit
 ) {
   return {
     query: gql`
@@ -46,7 +48,7 @@ export function searchQuery(
   };
 }
 
-export function popularQuery(page: number = 1) {
+export function popularQuery(page: number = 1, limit: number = defaultLimit) {
   return {
     query: gql`
       query SearchAnime(
@@ -74,14 +76,14 @@ export function popularQuery(page: number = 1) {
     `,
     variables: {
       search: { allowAdult: false, allowUnknown: false },
-      limit: limit + 1,
+      limit,
       page,
       countryOrigin: "ALL",
     },
   };
 }
 
-export function newQuery(page: number = 1) {
+export function newQuery(page: number = 1, limit: number = defaultLimit) {
   return {
     query: gql`
       query SearchAnime(
@@ -109,19 +111,19 @@ export function newQuery(page: number = 1) {
     `,
     variables: {
       search: { allowAdult: false, allowUnknown: false },
-      limit: limit + 1,
+      limit,
       page,
       countryOrigin: "ALL",
     },
   };
 }
 
-export function randomQuery(page: number = 1) {
+export function randomQuery(page: number = 1, limit: number = defaultLimit) {
   return {
     query: gql``,
     variables: {
       search: { allowAdult: false, allowUnknown: false },
-      limit: limit + 1,
+      limit,
       page,
       countryOrigin: "ALL",
     },

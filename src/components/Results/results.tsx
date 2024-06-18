@@ -11,7 +11,6 @@ import { SettingsContext } from "../../context/settingsContext";
 import { useNavigate } from "@solidjs/router";
 import { Mode, SearchType } from "../../types/settings";
 import {
-  defaultLimit,
   client,
   searchQuery,
   newQuery,
@@ -21,7 +20,6 @@ import {
 import { Icon } from "../Icons/icon";
 
 import "./results.scss";
-import { Title } from "../../types/titles";
 
 export function Results() {
   const {
@@ -33,8 +31,9 @@ export function Results() {
     searchTerm,
     setEpisodeNumber,
     searchType,
+    page,
+    setPage,
   } = useContext(SettingsContext);
-  const [page, setPage] = createSignal<number>(1);
   const [hasNextPage, setHasNextPage] = createSignal<boolean>(false);
   const [isLoading, setIsLoading] = createSignal<boolean>(false);
   const [error, setError] = createSignal<string | null>(null);

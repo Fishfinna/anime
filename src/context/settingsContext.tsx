@@ -13,6 +13,8 @@ export function SettingsProvider(props: { children: any }) {
   // searching
   const [searchTerm, setSearchTerm] = createSignal<string | undefined>();
   const [searchType, setSearchType] = createSignal<SearchType | undefined>();
+  // results
+  const [page, setPage] = createSignal<number>(1);
 
   const updateLocalStorage = (settings: any) => {
     localStorage.setItem("settings", JSON.stringify(settings));
@@ -62,6 +64,8 @@ export function SettingsProvider(props: { children: any }) {
         setSearchTerm,
         searchType,
         setSearchType,
+        page,
+        setPage,
       }}
     >
       {props.children}

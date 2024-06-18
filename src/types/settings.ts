@@ -16,6 +16,8 @@ export interface Settings {
   setSearchTerm: (arg: string) => void;
   searchType: Accessor<SearchType | undefined>;
   setSearchType: (arg: SearchType) => void;
+  page: Accessor<number | undefined>;
+  setPage: (arg: number) => void;
 }
 
 export enum Mode {

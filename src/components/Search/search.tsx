@@ -18,6 +18,7 @@ export function Search() {
     setSearchTerm,
     setSearchType,
     setCurrentTitle,
+    setPage,
   } = useContext(SettingsContext);
   let debounceTimeout: number | undefined;
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ export function Search() {
     setSearchTerm(inputRef()!.value);
     setMode(Mode.title);
     setTitles([]);
+    setPage(1);
     setSearchType(SearchType.text);
   }
 
