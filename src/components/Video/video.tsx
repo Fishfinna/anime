@@ -28,7 +28,6 @@ export function Video({ poster, urls }: VideoProps) {
     if (activeElement && isFocusableElement(activeElement)) {
       return;
     }
-
     switch (e.key) {
       case " ":
         e.preventDefault();
@@ -90,8 +89,11 @@ export function Video({ poster, urls }: VideoProps) {
     });
 
     document.addEventListener("keydown", handleKeyDown);
-
     onCleanup(() => {
+      if (player.currentTime()) {
+        const storedTime = player.currentTime() / 60 - 5;
+        console.log({ currentTime: storedTime });
+      }
       document.removeEventListener("keydown", handleKeyDown);
       if (player) {
         player.dispose();
