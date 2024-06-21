@@ -143,13 +143,19 @@ export function Results() {
       <Show when={page() != 1 || hasNextPage()}>
         <div class="page-control">
           <button disabled={page() == 1}>
-            <Icon name="chevron_left" onClick={() => setPage(page() - 1)} />
+            <Icon
+              name="chevron_left"
+              onClick={() => setPage((page() as number) - 1)}
+            />
           </button>
           <p class="page-control-block">|</p>
           <p class="current-page">page {page()}</p>
           <p class="page-control-block">|</p>
           <button disabled={!hasNextPage()}>
-            <Icon name="chevron_right" onClick={() => setPage(page() + 1)} />
+            <Icon
+              name="chevron_right"
+              onClick={() => setPage((page() as number) + 1)}
+            />
           </button>
         </div>
       </Show>
