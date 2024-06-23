@@ -10,13 +10,7 @@ import {
 import { SettingsContext } from "../../context/settingsContext";
 import { useNavigate } from "@solidjs/router";
 import { Mode, SearchType } from "../../types/settings";
-import {
-  client,
-  searchQuery,
-  newQuery,
-  randomQuery,
-  popularQuery,
-} from "../../api";
+import { client, searchQuery, newQuery, popularQuery } from "../../api";
 import { Icon } from "../Icons/icon";
 
 import "./results.scss";
@@ -100,8 +94,6 @@ export function Results() {
         performSearch(popularQuery);
       } else if (searchType() == SearchType.new) {
         performSearch(newQuery);
-      } else if (searchType() == SearchType.random) {
-        performSearch(randomQuery);
       }
     }
   }, [searchType, searchTerm]);
@@ -135,6 +127,10 @@ export function Results() {
               }}
             >
               <img src={title.thumbnail} />
+              <Icon
+                name="play_arrow filled"
+                className="play-arrow material-icons-round"
+              />
               <h3 class="thumbnail-title">{title.englishName || title.name}</h3>
             </div>
           )}

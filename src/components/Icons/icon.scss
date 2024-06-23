@@ -16,3 +16,16 @@
         display: none;
     }
 }
+
+.play-arrow {
+    position: absolute;
+    font-size: 50px;
+    color: white;
+    width: 100%;
+    top: calc(60px + 5vw);
+    left: calc(50% - 25px);
+}
+
+.material-icons {
+    border-radius: 50%;
+}

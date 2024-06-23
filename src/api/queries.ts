@@ -118,18 +118,6 @@ export function newQuery(page: number = 1, limit: number = defaultLimit) {
   };
 }
 
-export function randomQuery(page: number = 1, limit: number = defaultLimit) {
-  return {
-    query: gql``,
-    variables: {
-      search: { allowAdult: false, allowUnknown: false },
-      limit,
-      page,
-      countryOrigin: "ALL",
-    },
-  };
-}
-
 export function episodeQuery(episodeVariables: EpisodeVariables) {
   return {
     query: gql`

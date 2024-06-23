@@ -20,18 +20,10 @@ export function StartButtons() {
     setMode(Mode.title);
   }
 
-  // function findRandom(event: Event) {
-  //   event.preventDefault();
-  //   setSearchType(SearchType.random);
-  //   setMode(Mode.title);
-  // }
-
   return (
     <div class="start-buttons">
       <button onClick={findPopular}>popular</button>
       <button onClick={findNew}>new</button>
-      {/* TODO: random */}
-      {/* <button onClick={findRandom}>random</button> */}
     </div>
   );
 }

@@ -35,20 +35,19 @@
         color: #adadad;
     }
 
+
+    .play-arrow {
+        display: none;
+    }
+
     &:hover {
         img {
             transform: scale(1.01);
             filter: opacity(1);
         }
 
-        &::after {
-            content: '▶';
-            position: absolute;
-            top: 45%;
-            left: 50%;
-            font-size: 44px;
-            color: white;
-            transform: translate(-50%, -50%);
+        .play-arrow {
+            display: block;
         }
     }
 }
