@@ -1,6 +1,7 @@
 import { Context, createContext, createSignal, createEffect } from "solid-js";
 import { Title } from "../types/titles";
 import { Mode, SearchType, Settings } from "../types/settings";
+import { WatchLog } from "../types/watchLog";
 
 export const SettingsContext = createContext() as Context<Settings>;
 
@@ -15,6 +16,8 @@ export function SettingsProvider(props: { children: any }) {
   const [searchType, setSearchType] = createSignal<SearchType | undefined>();
   // results
   const [page, setPage] = createSignal<number>(1);
+  // continue watching
+  const [watchLog, setWatchLog] = createSignal<WatchLog[]>([]);
 
   const updateLocalStorage = (settings: any) => {
     localStorage.setItem("settings", JSON.stringify(settings));
@@ -29,6 +32,7 @@ export function SettingsProvider(props: { children: any }) {
         isDub: isDub(),
         episodeNumber: episodeNumber(),
         searchTerm: searchTerm(),
+        watchLog: watchLog(),
       };
       updateLocalStorage(settings);
     }
@@ -44,6 +48,7 @@ export function SettingsProvider(props: { children: any }) {
       setIsDub(parsedSettings.isDub);
       setEpisodeNumber(parsedSettings.episodeNumber);
       setSearchTerm(parsedSettings.searchTerm);
+      setWatchLog(parsedSettings.watchLog);
     }
   }, []);
 

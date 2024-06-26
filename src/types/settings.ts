@@ -1,5 +1,6 @@
 import { Accessor } from "solid-js";
 import { Title } from "./titles";
+import { WatchLog } from "./watchLog";
 
 export interface Settings {
   mode: Accessor<Mode>;
@@ -18,6 +19,8 @@ export interface Settings {
   setSearchType: (arg: SearchType) => void;
   page: Accessor<number | undefined>;
   setPage: (arg: number) => void;
+  watchLog: Accessor<WatchLog[]>;
+  setWatchLog: (arg: WatchLog[]) => void;
 }
 
 export enum Mode {
