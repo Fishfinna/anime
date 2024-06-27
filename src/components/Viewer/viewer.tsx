@@ -4,6 +4,7 @@ import {
   createEffect,
   createSignal,
   onMount,
+  onCleanup,
   useContext,
 } from "solid-js";
 import { Mode } from "../../types/settings";
@@ -31,6 +32,7 @@ export function Viewer(param: { showId?: string }) {
   const [error, setError] = createSignal<string>();
   const [isLoading, setIsLoading] = createSignal<boolean>(false);
   const [urls, setUrls] = createSignal<url[]>([]);
+  const [timestamp, setTimestamp] = createSignal<number>(0);
   const dateOffset = 1000;
 
   async function getUrls(episodeVariables: EpisodeVariables) {
@@ -142,6 +144,10 @@ export function Viewer(param: { showId?: string }) {
     }
   });
 
+  createEffect(() => {
+    console.log("time:", timestamp());
+  }, []);
+
   return (
     <Show when={mode() === Mode.episode}>
       <div class="viewer-container">
@@ -152,7 +158,12 @@ export function Viewer(param: { showId?: string }) {
           <div class="video-container">
             <Show when={!error()} fallback={<pre class="error">{error()}</pre>}>
               <Show when={!isLoading()} fallback={<div class="loader"></div>}>
-                <Video poster={currentTitle()?.thumbnail} urls={urls} />
+                <Video
+                  poster={currentTitle()?.thumbnail}
+                  urls={urls}
+                  timestamp={timestamp}
+                  setTimestamp={setTimestamp}
+                />
               </Show>
             </Show>
           </div>

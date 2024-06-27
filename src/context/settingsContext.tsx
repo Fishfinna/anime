@@ -71,6 +71,8 @@ export function SettingsProvider(props: { children: any }) {
         setSearchType,
         page,
         setPage,
+        watchLog,
+        setWatchLog,
       }}
     >
       {props.children}

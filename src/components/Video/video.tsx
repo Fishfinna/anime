@@ -6,9 +6,11 @@ import "./video.scss";
 interface VideoProps {
   poster?: string;
   urls: Accessor<{ link: string }[]>;
+  timestamp?: Accessor<number>;
+  setTimestamp: (arg: number) => void;
 }
 
-export function Video({ poster, urls }: VideoProps) {
+export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
   let videoRef: HTMLVideoElement | null = null;
   let player: any | null = null;
 
@@ -71,6 +73,7 @@ export function Video({ poster, urls }: VideoProps) {
   onMount(() => {
     if (!videoRef) return;
     var overrideNative = true;
+    console.log({ time: timestamp ? timestamp() : 0 });
 
     player = videojs(videoRef, {
       html5: {
@@ -86,13 +89,15 @@ export function Video({ poster, urls }: VideoProps) {
       preload: "auto",
       width: 800,
       height: 450,
+      timestamp: timestamp ? timestamp() : 0,
     });
 
     document.addEventListener("keydown", handleKeyDown);
     onCleanup(() => {
       if (player.currentTime()) {
-        const storedTime = player.currentTime() / 60 - 5;
-        console.log({ currentTime: storedTime });
+        let shutOffTime = (player.currentTime() - 5) / 60;
+        shutOffTime = parseFloat(shutOffTime.toFixed(2));
+        setTimestamp(shutOffTime);
       }
       document.removeEventListener("keydown", handleKeyDown);
       if (player) {
