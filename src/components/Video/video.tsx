@@ -73,7 +73,6 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
   onMount(() => {
     if (!videoRef) return;
     var overrideNative = true;
-    console.log({ time: timestamp ? timestamp() : 0 });
 
     player = videojs(videoRef, {
       html5: {
@@ -89,15 +88,17 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
       preload: "auto",
       width: 800,
       height: 450,
-      timestamp: timestamp ? timestamp() : 0,
     });
+
+    // player.currentTime(timestamp ? timestamp() : 0);
 
     document.addEventListener("keydown", handleKeyDown);
     onCleanup(() => {
-      if (player.currentTime()) {
-        let shutOffTime = (player.currentTime() - 5) / 60;
+      if (player.currentTime() > 5) {
+        let shutOffTime = player.currentTime() - 5;
         shutOffTime = parseFloat(shutOffTime.toFixed(2));
         setTimestamp(shutOffTime);
+        console.log("here");
       }
       document.removeEventListener("keydown", handleKeyDown);
       if (player) {

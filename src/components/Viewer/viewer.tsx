@@ -26,6 +26,8 @@ export function Viewer(param: { showId?: string }) {
     setIsDub,
     episodeNumber,
     setEpisodeNumber,
+    watchLog,
+    setWatchLog,
   } = useContext(SettingsContext);
   const [lang, setLang] = createSignal<"sub" | "dub">(isDub() ? "dub" : "sub");
   const [lastModified, setLastModified] = createSignal("");
@@ -133,7 +135,6 @@ export function Viewer(param: { showId?: string }) {
           })
         );
       } catch (err: any) {
-        console.log("here");
         setError(err.message);
       } finally {
         setIsLoading(false);
@@ -145,7 +146,21 @@ export function Viewer(param: { showId?: string }) {
   });
 
   createEffect(() => {
-    console.log("time:", timestamp());
+    console.log({
+      title: currentTitle(),
+      episodeNumber: episodeNumber(),
+      timestamp: timestamp(),
+      isDub: isDub(),
+    });
+
+    const log = {
+      title: currentTitle(),
+      episodeNumber: episodeNumber(),
+      timestamp: timestamp(),
+      isDub: isDub(),
+    };
+
+    console.log({ watchLog: watchLog(), log });
   }, []);
 
   return (
