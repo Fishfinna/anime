@@ -3,8 +3,8 @@ import {
   Show,
   createEffect,
   createSignal,
+  on,
   onMount,
-  onCleanup,
   useContext,
 } from "solid-js";
 import { Mode } from "../../types/settings";
@@ -15,6 +15,8 @@ import "./viewer.scss";
 import { convertUrlsToProperLinks } from "../../api/decodeUrl";
 import { Video } from "../Video/video";
 import { getShow } from "../../api";
+import { WatchLog } from "../../types/watchLog";
+import { Title } from "../../types/titles";
 
 export function Viewer(param: { showId?: string }) {
   const {
@@ -48,6 +50,33 @@ export function Viewer(param: { showId?: string }) {
     return await convertUrlsToProperLinks(data.episode.sourceUrls);
   }
 
+  async function manageWatchLog() {
+    if (timestamp() != 0 && currentTitle() != undefined) {
+      const log: WatchLog = {
+        title: currentTitle() as Title,
+        episodeNumber: parseInt(episodeNumber() as string),
+        timestamp: timestamp(),
+        isDub: isDub(),
+      };
+
+      const existingLogIndex = watchLog().findIndex(
+        (log) => log.title._id === currentTitle()?._id
+      );
+      if (existingLogIndex !== -1) {
+        const updatedWatchLog = [...watchLog()];
+        updatedWatchLog[existingLogIndex] = log;
+        setWatchLog(updatedWatchLog);
+      } else {
+        setWatchLog([...watchLog(), log]);
+      }
+
+      if (watchLog().length > 5) {
+        const trimmedWatchLog = watchLog().slice(-5);
+        setWatchLog(trimmedWatchLog);
+      }
+    }
+  }
+
   // handle date modified
   createEffect(() => {
     setLang(isDub() ? "dub" : "sub");
@@ -72,6 +101,7 @@ export function Viewer(param: { showId?: string }) {
   // request for episode sources
   createEffect(async () => {
     // handle the episode numbers
+    setTimestamp(0);
     const episodes = currentTitle()!?.availableEpisodesDetail[lang()].sort(
       (a: any, b: any) => a - b
     );
@@ -145,23 +175,17 @@ export function Viewer(param: { showId?: string }) {
     }
   });
 
-  createEffect(() => {
-    console.log({
-      title: currentTitle(),
-      episodeNumber: episodeNumber(),
-      timestamp: timestamp(),
-      isDub: isDub(),
-    });
-
-    const log = {
-      title: currentTitle(),
-      episodeNumber: episodeNumber(),
-      timestamp: timestamp(),
-      isDub: isDub(),
-    };
-
-    console.log({ watchLog: watchLog(), log });
-  }, []);
+  createEffect(
+    on(
+      [timestamp, currentTitle, episodeNumber, isDub],
+      () => {
+        manageWatchLog();
+      },
+      {
+        defer: true,
+      }
+    )
+  );
 
   return (
     <Show when={mode() === Mode.episode}>
@@ -199,7 +223,10 @@ export function Viewer(param: { showId?: string }) {
                 {(episode) => (
                   <li
                     class={episodeNumber() == episode ? "selected" : ""}
-                    onClick={() => setEpisodeNumber(episode)}
+                    onClick={() => {
+                      manageWatchLog();
+                      setEpisodeNumber(episode);
+                    }}
                   >
                     {episode}
                   </li>

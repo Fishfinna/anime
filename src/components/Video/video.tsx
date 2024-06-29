@@ -95,10 +95,9 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
     document.addEventListener("keydown", handleKeyDown);
     onCleanup(() => {
       if (player.currentTime() > 5) {
-        let shutOffTime = player.currentTime() - 5;
+        let shutOffTime = player.currentTime() - 2;
         shutOffTime = parseFloat(shutOffTime.toFixed(2));
         setTimestamp(shutOffTime);
-        console.log("here");
       }
       document.removeEventListener("keydown", handleKeyDown);
       if (player) {
