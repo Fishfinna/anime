@@ -229,4 +229,12 @@
     .vjs-volume-panel {
         display: none !important;
     }
+
+    .vjs-theme-city .vjs-play-control {
+        flex: 3;
+    }
+
+    .vjs-theme-city .vjs-current-time {
+        flex: 1;
+    }
 }
