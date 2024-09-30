@@ -10,7 +10,7 @@ interface VideoProps {
   setTimestamp: (arg: number) => void;
 }
 
-export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
+export function Video({ poster, urls, setTimestamp }: VideoProps) {
   let videoRef: HTMLVideoElement | null = null;
   let player: any | null = null;
 
