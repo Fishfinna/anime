@@ -90,8 +90,6 @@ export function Video({ poster, urls, setTimestamp }: VideoProps) {
       height: 450,
     });
 
-    // player.currentTime(timestamp ? timestamp() : 0);
-
     document.addEventListener("keydown", handleKeyDown);
     onCleanup(() => {
       if (player.currentTime() > 5) {
