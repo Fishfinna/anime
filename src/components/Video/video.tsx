@@ -72,7 +72,8 @@ export function Video({ poster, urls, setTimestamp }: VideoProps) {
 
   onMount(() => {
     if (!videoRef) return;
-    var overrideNative = true;
+
+    const overrideNative = true;
 
     player = videojs(videoRef, {
       html5: {
@@ -86,11 +87,12 @@ export function Video({ poster, urls, setTimestamp }: VideoProps) {
       playsinline: true,
       controls: true,
       preload: "auto",
-      width: 800,
-      height: 450,
+      fluid: true,
+      aspectRatio: "16:9",
     });
 
     document.addEventListener("keydown", handleKeyDown);
+
     onCleanup(() => {
       if (player.currentTime() > 5) {
         let shutOffTime = player.currentTime() - 2;
@@ -108,7 +110,7 @@ export function Video({ poster, urls, setTimestamp }: VideoProps) {
     <video
       ref={(el) => (videoRef = el)}
       poster={poster}
-      class="video-js vjs-theme-city"
+      class="video-js vjs-fluid vjs-theme-city"
     >
       <For each={urls()}>
         {(url) => (
