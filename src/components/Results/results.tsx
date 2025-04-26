@@ -126,7 +126,7 @@ export function Results() {
                 navigate(`/anime/${title._id}`);
               }}
             >
-              <img src={title.thumbnail} />
+              <img src={title.thumbnail} alt={title.englishName} />
               <Icon
                 name="play_arrow filled"
                 className="play-arrow material-icons-round"
