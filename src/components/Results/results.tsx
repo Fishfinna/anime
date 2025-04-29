@@ -123,7 +123,7 @@ export function Results() {
                 event.preventDefault();
                 setCurrentTitle(title);
                 setMode(Mode.episode);
-                navigate(`/anime/${title._id}`);
+                navigate(`/anime?show_id=${title._id}`);
               }}
             >
               <img
