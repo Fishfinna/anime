@@ -6,6 +6,7 @@ import { SettingsProvider } from "./context/settingsContext";
 import { ErrorPage } from "./components/Error/error";
 import { Results } from "./components/Results/results";
 import { Viewer } from "./components/Viewer/viewer";
+import Recent from "./components/Recent/recent";
 
 function AnimePage() {
   const [searchParams] = useSearchParams();
@@ -14,6 +15,7 @@ function AnimePage() {
   return (
     <>
       <Search />
+      <Recent />
       <Results />
       <Viewer showId={showId} />
     </>

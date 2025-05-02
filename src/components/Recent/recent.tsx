@@ -1,16 +1,14 @@
-import { Title } from "../../types/titles";
-import { For } from "solid-js";
+import { For, useContext } from "solid-js";
+import { SettingsContext } from "../../context/settingsContext";
 
-interface RecentTitle extends Title {
-  episodeNumber: number;
-  watchTime: number;
-}
+export default function Recent() {
+  const { watchLog } = useContext(SettingsContext);
 
-export default function Recent({ titles }: { titles: () => RecentTitle[] }) {
   return (
     <>
       <h3>Recently Watching:</h3>
-      <For each={titles()}>{(title) => <p>{title.name}</p>}</For>
+      {/* <p>{JSON.stringify(watchLog())}</p> */}
+      <For each={watchLog()}>{({ title }) => <p>{title.name}</p>}</For>
     </>
   );
 }

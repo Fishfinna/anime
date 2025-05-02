@@ -58,6 +58,7 @@ export function Viewer(param: { showId?: string }) {
         timestamp: timestamp(),
         isDub: isDub(),
       };
+      console.log({ log });
 
       const existingLogIndex = watchLog().findIndex(
         (log) => log.title._id === currentTitle()?._id
@@ -66,14 +67,17 @@ export function Viewer(param: { showId?: string }) {
         const updatedWatchLog = [...watchLog()];
         updatedWatchLog[existingLogIndex] = log;
         setWatchLog(updatedWatchLog);
+        console.log({ updatedWatchLog });
       } else {
         setWatchLog([...watchLog(), log]);
+        console.log({ log });
       }
 
-      if (watchLog().length > 5) {
-        const trimmedWatchLog = watchLog().slice(-5);
+      if (watchLog().length > 15) {
+        const trimmedWatchLog = watchLog().slice();
         setWatchLog(trimmedWatchLog);
       }
+      console.log({ watchLog: watchLog() });
     }
   }
 
