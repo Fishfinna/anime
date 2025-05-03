@@ -70,6 +70,14 @@ export function Video({ poster, urls, setTimestamp }: VideoProps) {
     }
   };
 
+  const updateTimestamp = () => {
+    if (player && player.currentTime() > 5) {
+      let shutOffTime = player.currentTime();
+      shutOffTime = parseFloat(shutOffTime.toFixed(2));
+      setTimestamp(shutOffTime);
+    }
+  };
+
   onMount(() => {
     if (!videoRef) return;
 
@@ -91,15 +99,28 @@ export function Video({ poster, urls, setTimestamp }: VideoProps) {
       aspectRatio: "16:9",
     });
 
+    let firstPlay = true;
+
+    player.on("play", () => {
+      if (firstPlay) {
+        player.currentTime(1);
+        setTimestamp(1);
+        firstPlay = false;
+      }
+    });
+
+    player.on("pause", () => {
+      updateTimestamp();
+    });
+
+    window.addEventListener("beforeunload", updateTimestamp);
     document.addEventListener("keydown", handleKeyDown);
 
     onCleanup(() => {
-      if (player.currentTime() > 5) {
-        let shutOffTime = player.currentTime() - 2;
-        shutOffTime = parseFloat(shutOffTime.toFixed(2));
-        setTimestamp(shutOffTime);
-      }
+      window.removeEventListener("beforeunload", updateTimestamp);
       document.removeEventListener("keydown", handleKeyDown);
+      updateTimestamp();
+
       if (player) {
         player.dispose();
       }

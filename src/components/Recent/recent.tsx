@@ -7,8 +7,17 @@ export default function Recent() {
   return (
     <>
       <h3>Recently Watching:</h3>
-      {/* <p>{JSON.stringify(watchLog())}</p> */}
-      <For each={watchLog()}>{({ title }) => <p>{title.name}</p>}</For>
+      <For each={watchLog()}>
+        {({ title, episodeNumber, timestamp }) => (
+          <p>
+            {title.name} <b>ep.{episodeNumber}</b>
+            <b>
+              timestamp: {Math.floor((timestamp || 0) / 60)}:
+              {String(Math.floor((timestamp || 0) % 60)).padStart(2, "0")}
+            </b>
+          </p>
+        )}
+      </For>
     </>
   );
 }

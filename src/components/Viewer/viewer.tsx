@@ -73,10 +73,8 @@ export function Viewer(param: { showId?: string }) {
         console.log({ log });
       }
 
-      if (watchLog().length > 15) {
-        const trimmedWatchLog = watchLog().slice();
-        setWatchLog(trimmedWatchLog);
-      }
+      const trimmedWatchLog = watchLog().slice(-20);
+      setWatchLog(trimmedWatchLog);
       console.log({ watchLog: watchLog() });
     }
   }
@@ -183,6 +181,7 @@ export function Viewer(param: { showId?: string }) {
     on(
       [timestamp, currentTitle, episodeNumber, isDub],
       () => {
+        console.log({ timestamp: timestamp() });
         manageWatchLog();
       },
       {
