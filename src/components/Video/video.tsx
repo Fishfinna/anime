@@ -10,7 +10,7 @@ interface VideoProps {
   setTimestamp: (arg: number) => void;
 }
 
-export function Video({ poster, urls, setTimestamp }: VideoProps) {
+export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
   let videoRef: HTMLVideoElement | null = null;
   let player: any | null = null;
 
@@ -101,10 +101,17 @@ export function Video({ poster, urls, setTimestamp }: VideoProps) {
 
     let firstPlay = true;
 
+    player.ready(() => {
+      player.one("loadedmetadata", () => {
+        const ts = timestamp?.();
+        if (ts && !isNaN(ts)) {
+          player.currentTime(ts);
+        }
+      });
+    });
+
     player.on("play", () => {
       if (firstPlay) {
-        player.currentTime(1);
-        setTimestamp(1);
         firstPlay = false;
       }
     });
