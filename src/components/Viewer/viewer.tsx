@@ -30,13 +30,14 @@ export function Viewer(param: { showId?: string }) {
     setEpisodeNumber,
     watchLog,
     setWatchLog,
+    timestamp,
+    setTimestamp,
   } = useContext(SettingsContext);
   const [lang, setLang] = createSignal<"sub" | "dub">(isDub() ? "dub" : "sub");
   const [lastModified, setLastModified] = createSignal("");
   const [error, setError] = createSignal<string>();
   const [isLoading, setIsLoading] = createSignal<boolean>(false);
   const [urls, setUrls] = createSignal<url[]>([]);
-  const [timestamp, setTimestamp] = createSignal<number>(0);
   const dateOffset = 1000;
 
   async function getUrls(episodeVariables: EpisodeVariables) {
@@ -58,7 +59,6 @@ export function Viewer(param: { showId?: string }) {
         timestamp: timestamp(),
         isDub: isDub(),
       };
-      console.log({ log });
 
       const existingLogIndex = watchLog().findIndex(
         (log) => log.title._id === currentTitle()?._id
@@ -67,15 +67,12 @@ export function Viewer(param: { showId?: string }) {
         const updatedWatchLog = [...watchLog()];
         updatedWatchLog[existingLogIndex] = log;
         setWatchLog(updatedWatchLog);
-        console.log({ updatedWatchLog });
       } else {
         setWatchLog([...watchLog(), log]);
-        console.log({ log });
       }
 
       const trimmedWatchLog = watchLog().slice(-20);
       setWatchLog(trimmedWatchLog);
-      console.log({ watchLog: watchLog() });
     }
   }
 
@@ -103,7 +100,6 @@ export function Viewer(param: { showId?: string }) {
   // request for episode sources
   createEffect(async () => {
     // handle the episode numbers
-    setTimestamp(0);
     const episodes = currentTitle()!?.availableEpisodesDetail[lang()].sort(
       (a: any, b: any) => a - b
     );
@@ -135,7 +131,14 @@ export function Viewer(param: { showId?: string }) {
     } finally {
       setIsLoading(false);
     }
-  }, [episodeNumber, isDub, lang]);
+  });
+
+  createEffect(
+    on([episodeNumber], () => {
+      setTimestamp(0);
+      console.log(episodeNumber(), timestamp());
+    })
+  );
 
   // reload the content when the page reloads
   onMount(async () => {
@@ -181,7 +184,6 @@ export function Viewer(param: { showId?: string }) {
     on(
       [timestamp, currentTitle, episodeNumber, isDub],
       () => {
-        console.log({ timestamp: timestamp() });
         manageWatchLog();
       },
       {

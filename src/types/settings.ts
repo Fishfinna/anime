@@ -1,4 +1,4 @@
-import { Accessor } from "solid-js";
+import { Accessor, Setter } from "solid-js";
 import { Title } from "./titles";
 import { WatchLog } from "./watchLog";
 
@@ -12,9 +12,9 @@ export interface Settings {
   isDub: Accessor<boolean>;
   setIsDub: (arg: boolean) => void;
   episodeNumber: Accessor<string | undefined>;
-  setEpisodeNumber: (arg: string) => void;
+  setEpisodeNumber: Setter<string | undefined>;
   timestamp: Accessor<number | undefined>;
-  setTimestamp: Accessor<number | undefined>;
+  setTimestamp: Setter<number | undefined>;
   searchTerm: Accessor<string | undefined>;
   setSearchTerm: (arg: string) => void;
   searchType: Accessor<SearchType | undefined>;

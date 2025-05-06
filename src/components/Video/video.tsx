@@ -6,7 +6,7 @@ import "./video.scss";
 interface VideoProps {
   poster?: string;
   urls: Accessor<{ link: string }[]>;
-  timestamp?: Accessor<number>;
+  timestamp?: Accessor<number | undefined>;
   setTimestamp: (arg: number) => void;
 }
 
@@ -79,6 +79,7 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
   };
 
   onMount(() => {
+    console.log(timestamp?.());
     if (!videoRef) return;
 
     const overrideNative = true;
@@ -120,7 +121,9 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
       updateTimestamp();
     });
 
-    window.addEventListener("beforeunload", updateTimestamp);
+    window.addEventListener("beforeunload", () => {
+      updateTimestamp;
+    });
     document.addEventListener("keydown", handleKeyDown);
 
     onCleanup(() => {
