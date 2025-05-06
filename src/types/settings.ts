@@ -13,6 +13,8 @@ export interface Settings {
   setIsDub: (arg: boolean) => void;
   episodeNumber: Accessor<string | undefined>;
   setEpisodeNumber: (arg: string) => void;
+  timestamp: Accessor<number | undefined>;
+  setTimestamp: Accessor<number | undefined>;
   searchTerm: Accessor<string | undefined>;
   setSearchTerm: (arg: string) => void;
   searchType: Accessor<SearchType | undefined>;

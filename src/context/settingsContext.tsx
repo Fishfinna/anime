@@ -11,6 +11,7 @@ export function SettingsProvider(props: { children: any }) {
   const [currentTitle, setCurrentTitle] = createSignal<Title | undefined>();
   const [isDub, setIsDub] = createSignal<boolean>(false);
   const [episodeNumber, setEpisodeNumber] = createSignal<string | undefined>();
+  const [timestamp, setTimestamp] = createSignal<number>(0);
   // searching
   const [searchTerm, setSearchTerm] = createSignal<string | undefined>();
   const [searchType, setSearchType] = createSignal<SearchType | undefined>();
@@ -31,6 +32,7 @@ export function SettingsProvider(props: { children: any }) {
         currentTitle: currentTitle(),
         isDub: isDub(),
         episodeNumber: episodeNumber(),
+        timestamp: timestamp(),
         searchTerm: searchTerm(),
         watchLog: watchLog(),
       };
@@ -47,6 +49,7 @@ export function SettingsProvider(props: { children: any }) {
       setCurrentTitle(parsedSettings.currentTitle);
       setIsDub(parsedSettings.isDub);
       setEpisodeNumber(parsedSettings.episodeNumber);
+      setTimestamp(parsedSettings.timestamp);
       setSearchTerm(parsedSettings.searchTerm);
       setWatchLog(parsedSettings.watchLog);
     }
@@ -65,6 +68,8 @@ export function SettingsProvider(props: { children: any }) {
         setIsDub,
         episodeNumber,
         setEpisodeNumber,
+        timestamp,
+        setTimestamp,
         searchTerm,
         setSearchTerm,
         searchType,
