@@ -1,4 +1,4 @@
-import { onMount, onCleanup, Accessor, For } from "solid-js";
+import { onMount, onCleanup, Accessor, For, createEffect, on } from "solid-js";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import "./video.scss";
@@ -79,7 +79,6 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
   };
 
   onMount(() => {
-    console.log(timestamp?.());
     if (!videoRef) return;
 
     const overrideNative = true;
@@ -121,15 +120,20 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
       updateTimestamp();
     });
 
-    window.addEventListener("beforeunload", () => {
-      updateTimestamp;
+    const saveInterval = setInterval(() => {
+      if (player && !player.paused()) {
+        updateTimestamp();
+      }
+    }, 30000);
+
+    player.on("seeked", () => {
+      updateTimestamp();
     });
     document.addEventListener("keydown", handleKeyDown);
+    clearInterval(saveInterval);
 
     onCleanup(() => {
-      window.removeEventListener("beforeunload", updateTimestamp);
       document.removeEventListener("keydown", handleKeyDown);
-      updateTimestamp();
 
       if (player) {
         player.dispose();
