@@ -1,11 +1,12 @@
-import { For, useContext } from "solid-js";
+import { For, Show, useContext } from "solid-js";
 import { SettingsContext } from "../../context/settingsContext";
+import { Mode } from "../../types/settings";
 
 export default function Recent() {
-  const { watchLog } = useContext(SettingsContext);
+  const { watchLog, mode } = useContext(SettingsContext);
 
   return (
-    <>
+    <Show when={mode() === Mode.none}>
       <h3>Recently Watching:</h3>
       <For each={watchLog()}>
         {({ title, episodeNumber, timestamp }) => (
@@ -18,6 +19,6 @@ export default function Recent() {
           </p>
         )}
       </For>
-    </>
+    </Show>
   );
 }
