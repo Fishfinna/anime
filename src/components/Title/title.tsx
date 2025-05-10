@@ -1,5 +1,5 @@
-import { useContext } from "solid-js";
 import "./title.scss";
+import { useContext } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import { SettingsContext } from "../../context/settingsContext";
 import { Mode } from "../../types/settings";
