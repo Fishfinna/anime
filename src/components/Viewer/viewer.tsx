@@ -65,10 +65,11 @@ export function Viewer(param: { showId?: string }) {
       );
       if (existingLogIndex !== -1) {
         const updatedWatchLog = [...watchLog()];
+        // TODO: fix this thumbnail not working!
         updatedWatchLog[existingLogIndex] = log;
         setWatchLog(updatedWatchLog);
       } else {
-        setWatchLog([...watchLog(), log]);
+        setWatchLog([log, ...watchLog()]);
       }
 
       const trimmedWatchLog = watchLog().slice(-20);
@@ -136,7 +137,6 @@ export function Viewer(param: { showId?: string }) {
   createEffect(
     on([episodeNumber], () => {
       setTimestamp(0);
-      console.log(episodeNumber(), timestamp());
     })
   );
 
