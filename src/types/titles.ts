@@ -5,9 +5,8 @@ export interface EpisodeDetail {
 }
 
 export interface LastEpisodeTimestamp {
-  sub: number;
-  dub: number;
-  raw: number;
+  episodeNumber: number;
+  timestamp: number;
 }
 
 export interface Title {
@@ -17,5 +16,5 @@ export interface Title {
   thumbnail: string;
   __typename: string;
   availableEpisodesDetail: EpisodeDetail;
-  lastEpisodeTimestamp: LastEpisodeTimestamp;
+  lastEpisodeTimestamp?: LastEpisodeTimestamp;
 }
