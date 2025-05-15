@@ -124,7 +124,7 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
       if (player && !player.paused()) {
         updateTimestamp();
       }
-    }, 30000);
+    }, 10000);
 
     player.on("seeked", () => {
       updateTimestamp();

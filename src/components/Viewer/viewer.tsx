@@ -65,9 +65,8 @@ export function Viewer(param: { showId?: string }) {
       );
       if (existingLogIndex !== -1) {
         const updatedWatchLog = [...watchLog()];
-        // TODO: fix this thumbnail not working!
-        updatedWatchLog[existingLogIndex] = log;
-        setWatchLog(updatedWatchLog);
+        updatedWatchLog.splice(existingLogIndex, 1);
+        setWatchLog([log, ...updatedWatchLog]);
       } else {
         setWatchLog([log, ...watchLog()]);
       }
