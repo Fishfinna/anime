@@ -148,7 +148,7 @@ export function getShow(showId: string) {
           name
           englishName
           lastEpisodeTimestamp
-          banner
+          thumbnail
           nextAiringEpisode
           availableEpisodesDetail
         }

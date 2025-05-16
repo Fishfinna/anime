@@ -71,11 +71,8 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
   };
 
   const updateTimestamp = () => {
-    if (player && player.currentTime() > 5) {
-      let shutOffTime = player.currentTime();
-      shutOffTime = parseFloat(shutOffTime.toFixed(2));
-      setTimestamp(shutOffTime);
-    }
+    setTimestamp(parseFloat(player.currentTime().toFixed(2)));
+    console.log(player.currentTime());
   };
 
   onMount(() => {
@@ -116,19 +113,19 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
       }
     });
 
-    player.on("pause", () => {
-      updateTimestamp();
-    });
-
     const saveInterval = setInterval(() => {
       if (player && !player.paused()) {
         updateTimestamp();
       }
     }, 10000);
 
-    player.on("seeked", () => {
-      updateTimestamp();
+    const updateOn = ["play", "pause", "seeked"];
+    updateOn.forEach((action) => {
+      player.on(action, () => {
+        updateTimestamp();
+      });
     });
+
     document.addEventListener("keydown", handleKeyDown);
     clearInterval(saveInterval);
 

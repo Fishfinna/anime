@@ -37,6 +37,25 @@ body {
   margin: 0;
 }
 
+.basic-button {
+  margin: 10px;
+  background-color: #292929;
+  border: none;
+  font-weight: bold;
+  padding: 15px;
+  border-radius: 10px;
+
+  &:enabled {
+    cursor: pointer;
+    color: #5a5a5a;
+  }
+
+  &:hover {
+    background-color: #313131;
+    color: rgb(192, 192, 192);
+  }
+}
+
 .error {
   font-family: Helvetica, sans-serif;
   color: #c06565;

@@ -22,8 +22,12 @@ export function StartButtons() {
 
   return (
     <div class="start-buttons">
-      <button onClick={findPopular}>popular</button>
-      <button onClick={findNew}>new</button>
+      <button class="basic-button" onClick={findPopular}>
+        popular
+      </button>
+      <button class="basic-button" onClick={findNew}>
+        new
+      </button>
     </div>
   );
 }

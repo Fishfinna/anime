@@ -25,19 +25,17 @@ export function SettingsProvider(props: { children: any }) {
   };
 
   createEffect(() => {
-    if (mode() != Mode.none) {
-      const settings = {
-        mode: mode(),
-        titles: titles(),
-        currentTitle: currentTitle(),
-        isDub: isDub(),
-        episodeNumber: episodeNumber(),
-        timestamp: timestamp(),
-        searchTerm: searchTerm(),
-        watchLog: watchLog(),
-      };
-      updateLocalStorage(settings);
-    }
+    const settings = {
+      mode: mode(),
+      titles: titles(),
+      currentTitle: currentTitle(),
+      isDub: isDub(),
+      episodeNumber: episodeNumber(),
+      timestamp: timestamp(),
+      searchTerm: searchTerm(),
+      watchLog: watchLog(),
+    };
+    updateLocalStorage(settings);
   });
 
   createEffect(() => {

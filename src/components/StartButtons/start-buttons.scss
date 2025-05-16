@@ -5,23 +5,7 @@
     width: 100%;
     max-width: 70vw;
 
-    button {
-        margin: 10px;
-        background-color: #292929;
-        border: none;
-        font-weight: bold;
-        padding: 15px;
-        border-radius: 10px;
+    * {
         flex: 1;
-
-        &:enabled {
-            cursor: pointer;
-            color: #5a5a5a;
-        }
-
-        &:hover {
-            background-color: #313131;
-            color: rgb(192, 192, 192);
-        }
     }
 }
