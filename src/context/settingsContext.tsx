@@ -1,4 +1,10 @@
-import { Context, createContext, createSignal, createEffect } from "solid-js";
+import {
+  Context,
+  createContext,
+  createSignal,
+  onMount,
+  createEffect,
+} from "solid-js";
 import { Title } from "../types/titles";
 import { Mode, SearchType, Settings } from "../types/settings";
 import { WatchLog } from "../types/watchLog";
@@ -12,19 +18,37 @@ export function SettingsProvider(props: { children: any }) {
   const [isDub, setIsDub] = createSignal<boolean>(false);
   const [episodeNumber, setEpisodeNumber] = createSignal<string | undefined>();
   const [timestamp, setTimestamp] = createSignal<number | undefined>(0);
-  // searching
   const [searchTerm, setSearchTerm] = createSignal<string | undefined>();
   const [searchType, setSearchType] = createSignal<SearchType | undefined>();
-  // results
   const [page, setPage] = createSignal<number>(1);
-  // continue watching
   const [watchLog, setWatchLog] = createSignal<WatchLog[]>([]);
 
-  const updateLocalStorage = (settings: any) => {
-    localStorage.setItem("settings", JSON.stringify(settings));
-  };
+  let initialized = false;
+
+  onMount(() => {
+    const savedSettings = localStorage.getItem("settings");
+    if (savedSettings) {
+      try {
+        const parsed = JSON.parse(savedSettings);
+        setMode(parsed.mode ?? Mode.none);
+        setTitles(parsed.titles ?? []);
+        setCurrentTitle(parsed.currentTitle);
+        setIsDub(parsed.isDub ?? false);
+        setEpisodeNumber(parsed.episodeNumber);
+        setTimestamp(parsed.timestamp ?? 0);
+        setSearchTerm(parsed.searchTerm);
+        setWatchLog(parsed.watchLog ?? []);
+      } catch (err) {
+        console.error("Failed to parse saved settings", err);
+      }
+    }
+
+    initialized = true;
+  });
 
   createEffect(() => {
+    if (!initialized) return;
+
     const settings = {
       mode: mode(),
       titles: titles(),
@@ -35,22 +59,13 @@ export function SettingsProvider(props: { children: any }) {
       searchTerm: searchTerm(),
       watchLog: watchLog(),
     };
-    updateLocalStorage(settings);
-  });
 
-  createEffect(() => {
-    const savedSettings = localStorage.getItem("settings");
-    if (savedSettings) {
-      const parsedSettings = JSON.parse(savedSettings);
-      setMode(parsedSettings.mode);
-      setTitles(parsedSettings.titles);
-      setCurrentTitle(parsedSettings.currentTitle);
-      setIsDub(parsedSettings.isDub);
-      setEpisodeNumber(parsedSettings.episodeNumber);
-      setSearchTerm(parsedSettings.searchTerm);
-      setWatchLog(parsedSettings.watchLog);
+    try {
+      localStorage.setItem("settings", JSON.stringify(settings));
+    } catch (err) {
+      console.error("Failed to save settings", err);
     }
-  }, []);
+  });
 
   return (
     <SettingsContext.Provider
