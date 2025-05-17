@@ -71,8 +71,8 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
   };
 
   const updateTimestamp = () => {
-    setTimestamp(parseFloat(player.currentTime().toFixed(2)));
-    console.log(player.currentTime());
+    const time = parseFloat(player.currentTime().toFixed(2));
+    setTimestamp(time == 0 ? 0.1 : time);
   };
 
   onMount(() => {
