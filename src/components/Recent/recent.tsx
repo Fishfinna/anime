@@ -11,10 +11,6 @@ export default function Recent() {
     setWatchLog([]);
   }
 
-  createEffect(() => {
-    console.log(watchLog()); //TODO: delete
-  });
-
   return (
     <Show when={mode() === Mode.none && watchLog().length}>
       <h3>Recently Watching:</h3>
