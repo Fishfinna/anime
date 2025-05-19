@@ -21,7 +21,6 @@ export default function Recent() {
       <For each={watchLog()}>
         {({ title, episodeNumber, timestamp }) => (
           <>
-            {console.log(title)}
             <Title title={title} />
             <p>
               <b>ep.{episodeNumber}</b>
