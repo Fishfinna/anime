@@ -11,6 +11,10 @@ export default function Recent() {
     setWatchLog([]);
   }
 
+  function removeRecentlyWatchedShow(index: number) {
+    setWatchLog(watchLog().filter((_, i) => i !== index));
+  }
+
   return (
     <Show when={mode() === Mode.none && watchLog().length}>
       <h3>Recently Watching:</h3>
@@ -19,7 +23,7 @@ export default function Recent() {
       </button>
       <div class="recent-titles" />
       <For each={watchLog()}>
-        {({ title, episodeNumber, timestamp }) => (
+        {({ title, episodeNumber, timestamp }, index) => (
           <>
             <Title title={title} />
             <p>
@@ -28,6 +32,9 @@ export default function Recent() {
                 timestamp: {Math.floor((timestamp || 0) / 60)}:
                 {String(Math.floor((timestamp || 0) % 60)).padStart(2, "0")}
               </b>
+              <button onclick={() => removeRecentlyWatchedShow(index())}>
+                Remove
+              </button>
             </p>
           </>
         )}
