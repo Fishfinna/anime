@@ -1,0 +1,12 @@
+.recent-show-item {
+    position: relative;
+
+    .remove-button {
+        position: absolute;
+        top: 5px;
+        background-color: transparent;
+        border: none;
+        right: 10px;
+        cursor: pointer;
+    }
+}

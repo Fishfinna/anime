@@ -6,8 +6,15 @@ import { Mode } from "../../types/settings";
 import { Icon } from "../Icons/icon";
 import { Title as TitleType } from "../../types/titles";
 
-export function Title({ title }: { title: TitleType }) {
-  const { setMode, setCurrentTitle } = useContext(SettingsContext);
+export function Title({
+  title,
+  episodeNumber,
+}: {
+  title: TitleType;
+  episodeNumber?: number;
+}) {
+  const { setMode, setCurrentTitle, setEpisodeNumber } =
+    useContext(SettingsContext);
   const navigate = useNavigate();
   const defaultSrc = "/anime/default-thumbnail.png";
 
@@ -18,6 +25,7 @@ export function Title({ title }: { title: TitleType }) {
         event.preventDefault();
         setCurrentTitle(title);
         setMode(Mode.episode);
+        setEpisodeNumber(episodeNumber?.toString() || "1"); //todo: update this to be the first for the show and fix the startup timestamp
         navigate(`/anime?show_id=${title._id}`);
       }}
     >
@@ -37,6 +45,9 @@ export function Title({ title }: { title: TitleType }) {
         className="play-arrow material-icons-round"
       />
       <h3 class="thumbnail-title">{title.englishName || title.name}</h3>
+      {episodeNumber ? (
+        <h4 class="episode-number">episode {episodeNumber}</h4>
+      ) : null}
     </div>
   );
 }
