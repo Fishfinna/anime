@@ -9,11 +9,13 @@ import { Title as TitleType } from "../../types/titles";
 export function Title({
   title,
   episodeNumber,
+  timestamp,
 }: {
   title: TitleType;
   episodeNumber?: number;
+  timestamp?: number;
 }) {
-  const { setMode, setCurrentTitle, setEpisodeNumber, isDub } =
+  const { setMode, setCurrentTitle, setEpisodeNumber, isDub, setTimestamp } =
     useContext(SettingsContext);
   const navigate = useNavigate();
   const defaultSrc = "/anime/default-thumbnail.png";
@@ -29,6 +31,7 @@ export function Title({
           episodeNumber?.toString() ||
             title.availableEpisodesDetail[isDub() ? "dub" : "sub"][0]
         );
+        setTimestamp(timestamp || 0);
         navigate(`/anime?show_id=${title._id}`);
       }}
     >
