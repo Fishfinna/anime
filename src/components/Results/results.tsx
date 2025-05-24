@@ -14,6 +14,7 @@ import { client, searchQuery, newQuery, popularQuery } from "../../api";
 import { Icon } from "../Icons/icon";
 
 import "./results.scss";
+import { Title } from "../Title/title";
 
 export function Results() {
   const {
@@ -115,36 +116,7 @@ export function Results() {
       </Show>
 
       <div class="results-container">
-        <For each={titles()}>
-          {(title) => (
-            <div
-              class="title"
-              onClick={(event) => {
-                event.preventDefault();
-                setCurrentTitle(title);
-                setMode(Mode.episode);
-                navigate(`/anime?show_id=${title._id}`);
-              }}
-            >
-              <img
-                src={title.thumbnail}
-                alt={title.englishName || title.name}
-                onError={(e) => {
-                  const img = e.currentTarget;
-                  if (!img.dataset.fallback) {
-                    img.dataset.fallback = "true";
-                    img.src = "/anime/default-thumbnail.png";
-                  }
-                }}
-              />
-              <Icon
-                name="play_arrow filled"
-                className="play-arrow material-icons-round"
-              />
-              <h3 class="thumbnail-title">{title.englishName || title.name}</h3>
-            </div>
-          )}
-        </For>
+        <For each={titles()}>{(title) => <Title title={title} />}</For>
       </div>
       <Show when={page() != 1 || hasNextPage()}>
         <div class="page-control">

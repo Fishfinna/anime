@@ -13,7 +13,7 @@ export function Title({
   title: TitleType;
   episodeNumber?: number;
 }) {
-  const { setMode, setCurrentTitle, setEpisodeNumber } =
+  const { setMode, setCurrentTitle, setEpisodeNumber, isDub } =
     useContext(SettingsContext);
   const navigate = useNavigate();
   const defaultSrc = "/anime/default-thumbnail.png";
@@ -25,7 +25,10 @@ export function Title({
         event.preventDefault();
         setCurrentTitle(title);
         setMode(Mode.episode);
-        setEpisodeNumber(episodeNumber?.toString() || "1"); //todo: update this to be the first for the show and fix the startup timestamp
+        setEpisodeNumber(
+          episodeNumber?.toString() ||
+            title.availableEpisodesDetail[isDub() ? "dub" : "sub"][0]
+        );
         navigate(`/anime?show_id=${title._id}`);
       }}
     >
