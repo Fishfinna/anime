@@ -1,4 +1,4 @@
-import { createEffect, For, Show, useContext } from "solid-js";
+import { For, Show, useContext } from "solid-js";
 import { SettingsContext } from "../../context/settingsContext";
 import { Mode } from "../../types/settings";
 import { Title } from "../Title/title";
