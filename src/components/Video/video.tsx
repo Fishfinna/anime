@@ -71,8 +71,7 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
   };
 
   const updateTimestamp = () => {
-    const time = parseFloat(player.currentTime().toFixed(2));
-    setTimestamp(time == 0 ? 0.1 : time);
+    setTimestamp(player.currentTime().toFixed(2));
   };
 
   onMount(() => {
@@ -97,19 +96,37 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
     });
 
     let firstPlay = true;
+    let timestampSet = false;
 
     player.ready(() => {
-      player.one("loadedmetadata", () => {
+      player.one("canplay", () => {
         const ts = timestamp?.();
-        if (ts && !isNaN(ts)) {
+        if (ts && !isNaN(ts) && ts > 0 && !timestampSet) {
           player.currentTime(ts);
+          timestampSet = true;
         }
+      });
+
+      player.one("loadeddata", () => {
+        setTimeout(() => {
+          const ts = timestamp?.();
+          if (ts && !isNaN(ts) && ts > 0 && !timestampSet) {
+            player.currentTime(ts);
+            timestampSet = true;
+          }
+        }, 500);
       });
     });
 
     player.on("play", () => {
       if (firstPlay) {
         firstPlay = false;
+        const ts = timestamp?.();
+        if (ts && !isNaN(ts) && ts > 0 && !timestampSet) {
+          console.log("On first play: Setting timestamp to:", ts);
+          player.currentTime(ts);
+          timestampSet = true;
+        }
       }
     });
 
@@ -127,15 +144,26 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
     });
 
     document.addEventListener("keydown", handleKeyDown);
-    clearInterval(saveInterval);
 
     onCleanup(() => {
       document.removeEventListener("keydown", handleKeyDown);
-
+      clearInterval(saveInterval);
       if (player) {
         player.dispose();
       }
     });
+  });
+
+  createEffect(() => {
+    if (player && player.readyState() >= 2) {
+      const ts = timestamp?.();
+      if (ts && !isNaN(ts) && ts > 0) {
+        const currentTime = player.currentTime();
+        if (Math.abs(currentTime - ts) > 5) {
+          player.currentTime(ts);
+        }
+      }
+    }
   });
 
   return (

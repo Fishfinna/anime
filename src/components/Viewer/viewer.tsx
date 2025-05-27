@@ -81,7 +81,7 @@ export function Viewer(param: { showId?: string }) {
     setLang(isDub() ? "dub" : "sub");
 
     const modifiedDate = new Date(
-      currentTitle()!?.lastEpisodeTimestamp[lang()] * dateOffset
+      currentTitle()!?.lastEpisodeTimestamp!?.[lang()] * dateOffset
     );
 
     const formattedDate = modifiedDate.toLocaleString("en-US", {
@@ -239,7 +239,7 @@ export function Viewer(param: { showId?: string }) {
             </Show>
           </ul>
         </div>
-        <Show when={currentTitle()?.lastEpisodeTimestamp[lang()]}>
+        <Show when={currentTitle()?.lastEpisodeTimestamp?.[lang()]}>
           <footer class="last-modified">
             Last episode posted on <br /> {lastModified()}
           </footer>

@@ -8,7 +8,6 @@ import {
   useContext,
 } from "solid-js";
 import { SettingsContext } from "../../context/settingsContext";
-import { useNavigate } from "@solidjs/router";
 import { Mode, SearchType } from "../../types/settings";
 import { client, searchQuery, newQuery, popularQuery } from "../../api";
 import { Icon } from "../Icons/icon";
@@ -32,7 +31,6 @@ export function Results() {
   const [hasNextPage, setHasNextPage] = createSignal<boolean>(false);
   const [isLoading, setIsLoading] = createSignal<boolean>(false);
   const [error, setError] = createSignal<string | null>(null);
-  const navigate = useNavigate();
 
   async function getNextPage(query: any, variables: any): Promise<boolean> {
     const validationVars = variables;
