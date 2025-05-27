@@ -9,7 +9,6 @@ import { Title as TitleType } from "../../types/titles";
 export function Title({
   title,
   episodeNumber,
-  timestamp,
 }: {
   title: TitleType;
   episodeNumber?: number;

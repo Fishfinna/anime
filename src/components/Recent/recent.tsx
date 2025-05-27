@@ -27,11 +27,7 @@ export default function Recent() {
         <For each={watchLog()}>
           {({ title, episodeNumber, timestamp }, index) => (
             <div class="recent-show-item">
-              <Title
-                title={title}
-                episodeNumber={episodeNumber}
-                timestamp={timestamp}
-              />
+              <Title title={title} episodeNumber={episodeNumber} />
               <p>
                 <b>
                   timestamp: {Math.floor((timestamp || 0) / 60)}:
