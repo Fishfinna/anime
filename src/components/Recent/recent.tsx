@@ -25,15 +25,9 @@ export default function Recent() {
         </button>
         <div class="recent-titles" />
         <For each={watchLog()}>
-          {({ title, episodeNumber, timestamp }, index) => (
+          {({ title, episodeNumber }, index) => (
             <div class="recent-show-item">
               <Title title={title} episodeNumber={episodeNumber} />
-              <p>
-                <b>
-                  timestamp: {Math.floor((timestamp || 0) / 60)}:
-                  {String(Math.floor((timestamp || 0) % 60)).padStart(2, "0")}
-                </b>
-              </p>
               <button
                 class="remove-button"
                 onclick={() => removeRecentlyWatchedShow(index())}
