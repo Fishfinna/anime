@@ -23,21 +23,21 @@ export default function Recent() {
         <button class="basic-button" onClick={clearRecentlyWatched}>
           clear recently watching
         </button>
-        <div class="recent-titles" />
-        <For each={watchLog()}>
-          {({ title, episodeNumber }, index) => (
-            <div class="recent-show-item">
-              <Title title={title} episodeNumber={episodeNumber} />
-              <button
-                class="remove-button"
-                onclick={() => removeRecentlyWatchedShow(index())}
-              >
-                <Icon name="close" />
-              </button>
-            </div>
-          )}
-        </For>
-        <div />
+        <div class="recent-titles">
+          <For each={watchLog()}>
+            {({ title, episodeNumber }, index) => (
+              <div class="recent-show-item">
+                <Title title={title} episodeNumber={episodeNumber} />
+                <button
+                  class="remove-button"
+                  onclick={() => removeRecentlyWatchedShow(index())}
+                >
+                  <Icon name="close" />
+                </button>
+              </div>
+            )}
+          </For>
+        </div>
       </div>
     </Show>
   );
