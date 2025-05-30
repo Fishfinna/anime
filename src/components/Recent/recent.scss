@@ -1,7 +1,10 @@
 .recent-titles {
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    gap: 15px;
+    overflow: hidden;
+    max-width: 90vw;
+    padding: 10px;
 }
 
 .recent-show-item {
