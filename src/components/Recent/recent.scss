@@ -2,9 +2,11 @@
     display: flex;
     flex-direction: row;
     gap: 15px;
-    overflow: hidden;
-    max-width: 90vw;
-    padding: 10px;
+    flex-wrap: wrap;
+    padding-top: 20px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
 }
 
 .recent-show-item {
