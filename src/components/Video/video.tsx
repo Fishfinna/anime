@@ -1,4 +1,4 @@
-import { onMount, onCleanup, Accessor, For, createEffect, on } from "solid-js";
+import { onMount, onCleanup, Accessor, For, createEffect } from "solid-js";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import "./video.scss";
