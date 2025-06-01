@@ -5,8 +5,10 @@
     flex-wrap: wrap;
     margin: 25px;
     margin-top: 40px;
-    justify-content: space-evenly;
-    align-items: center;
+    justify-content: center; // Changed from space-evenly to center
+    align-items: flex-start; // Changed to flex-start for better alignment
+    max-width: calc(100vw - 50px); // Ensure container doesn't exceed viewport
+    overflow: hidden; // Prevent any overflow
 }
 
 .title {
@@ -15,6 +17,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex: 0 0 auto; // Prevent flex items from shrinking
 
     img {
         object-fit: cover;
@@ -33,10 +36,16 @@
         overflow: hidden;
         text-overflow: ellipsis;
         color: #adadad;
+        margin-top: 8px; // Add some spacing
     }
 
     .play-arrow {
         display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
     }
 
     &:hover {
@@ -54,6 +63,8 @@
 .page-control {
     display: flex;
     align-items: center;
+    justify-content: center;
+    margin-top: 20px;
 
     &-block {
         color: #444;
@@ -87,6 +98,5 @@
                 cursor: pointer;
             }
         }
-
     }
 }
