@@ -5,59 +5,10 @@
     flex-wrap: wrap;
     margin: 25px;
     margin-top: 40px;
-    justify-content: center; // Changed from space-evenly to center
-    align-items: flex-start; // Changed to flex-start for better alignment
-    max-width: calc(100vw - 50px); // Ensure container doesn't exceed viewport
-    overflow: hidden; // Prevent any overflow
-}
-
-.title {
-    cursor: pointer;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex: 0 0 auto; // Prevent flex items from shrinking
-
-    img {
-        object-fit: cover;
-        width: calc(150px + 5vw);
-        height: calc(170px + 10vw);
-        border-radius: 10px;
-        transition: width 0.5s ease;
-        box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-        filter: opacity(0.9);
-    }
-
-    h3.thumbnail-title {
-        width: calc(150px + 5vw);
-        font-size: 12px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        color: #adadad;
-        margin-top: 8px; // Add some spacing
-    }
-
-    .play-arrow {
-        display: none;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 10;
-    }
-
-    &:hover {
-        img {
-            transform: scale(1.01);
-            filter: opacity(1);
-        }
-
-        .play-arrow {
-            display: block;
-        }
-    }
+    justify-content: center;
+    align-items: flex-start;
+    max-width: calc(100vw - 50px);
+    overflow: hidden;
 }
 
 .page-control {
