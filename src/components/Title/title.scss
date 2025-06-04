@@ -8,8 +8,8 @@
 
     img {
         object-fit: cover;
-        width: calc(150px + 5vw);
-        height: calc(170px + 10vw);
+        width: calc(180px + 2vw);
+        height: calc(240px + 2vw);
         border-radius: 10px;
         transition: width 0.5s ease;
         box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
@@ -41,5 +41,11 @@
         .play-arrow {
             display: block;
         }
+    }
+
+    .episode-number {
+        color: #6d6d6d;
+        margin-top: -15px;
+        font-size: 12px;
     }
 }

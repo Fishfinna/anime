@@ -34,10 +34,13 @@ export function Results() {
   const [currentLimit, setCurrentLimit] = createSignal<number>(6);
 
   function calculateOptimalLimit(): number {
+    const maxCards = 24;
+    const minCards = 4;
+
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
-    const cardWidth = 150 + (5 * viewportWidth) / 100;
-    const cardHeight = 170 + (10 * viewportWidth) / 100;
+    const cardWidth = 180 + (2 * viewportWidth) / 100;
+    const cardHeight = 240 + (2 * viewportWidth) / 100;
     const containerMargins = 50;
     const availableWidth = viewportWidth - containerMargins;
     const availableHeight = viewportHeight - 100;
@@ -54,27 +57,17 @@ export function Results() {
       cardsPerRow = Math.min(6, cardsPerRow);
     }
 
-    const effectiveCardHeight = cardHeight + 50; // Card + some vertical spacing
+    const effectiveCardHeight = cardHeight + 50;
     const rowsPerScreen = Math.floor(availableHeight / effectiveCardHeight);
     const safeRowsPerScreen = Math.max(1, Math.min(4, rowsPerScreen)); // Max 4 rows
 
     let totalCards = cardsPerRow * safeRowsPerScreen;
-
-    const maxCards = 24;
     if (totalCards > maxCards) {
       totalCards = Math.floor(maxCards / cardsPerRow) * cardsPerRow;
     }
 
     totalCards = Math.max(cardsPerRow, totalCards);
-
-    console.log(`Viewport: ${viewportWidth}x${viewportHeight}`);
-    console.log(
-      `Card dimensions: ${cardWidth.toFixed(1)}x${cardHeight.toFixed(1)}`
-    );
-    console.log(
-      `Cards per row: ${cardsPerRow}, Rows: ${safeRowsPerScreen}, Total: ${totalCards}`
-    );
-
+    totalCards = Math.max(minCards, totalCards);
     return totalCards;
   }
 
