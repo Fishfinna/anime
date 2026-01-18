@@ -14,6 +14,10 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
   let videoRef: HTMLVideoElement | null = null;
   let player: any | null = null;
 
+  const isTouch = window.matchMedia(
+    "(hover: none) and (pointer: coarse)",
+  ).matches;
+
   const isFocusableElement = (element: Element | null): boolean => {
     if (!element) return false;
     const focusableElements = ["INPUT", "TEXTAREA", "SELECT", "BUTTON"];
@@ -27,9 +31,8 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
     if (!player) return;
 
     const activeElement = document.activeElement;
-    if (activeElement && isFocusableElement(activeElement)) {
-      return;
-    }
+    if (activeElement && isFocusableElement(activeElement)) return;
+
     switch (e.key) {
       case " ":
         e.preventDefault();
@@ -65,13 +68,23 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
         e.preventDefault();
         player.muted(!player.muted());
         break;
+      case "Tab":
+        e.preventDefault();
+        const controlBar = player.getChild("controlBar");
+        const playButton = controlBar?.getChild("playToggle");
+        if (document.activeElement === videoRef) {
+          (playButton?.el() as HTMLElement)?.focus();
+        } else {
+          (videoRef as HTMLElement)?.focus();
+        }
+        break;
       default:
         break;
     }
   };
 
   const updateTimestamp = () => {
-    setTimestamp(player.currentTime().toFixed(2));
+    if (player) setTimestamp(Number(player.currentTime().toFixed(2)));
   };
 
   onMount(() => {
@@ -81,9 +94,7 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
 
     player = videojs(videoRef, {
       html5: {
-        hls: {
-          overrideNative,
-        },
+        hls: { overrideNative },
         nativeVideoTracks: !overrideNative,
         nativeAudioTracks: !overrideNative,
         nativeTextTracks: !overrideNative,
@@ -93,6 +104,12 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
       preload: "auto",
       fluid: true,
       aspectRatio: "16:9",
+      inactivityTimeout: isTouch ? 2000 : 0,
+      controlBar: {
+        volumePanel: !isTouch,
+        pictureInPictureToggle: !isTouch,
+        fullscreenToggle: true,
+      },
     });
 
     let firstPlay = true;
@@ -123,7 +140,6 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
         firstPlay = false;
         const ts = timestamp?.();
         if (ts && !isNaN(ts) && ts > 0 && !timestampSet) {
-          console.log("On first play: Setting timestamp to:", ts);
           player.currentTime(ts);
           timestampSet = true;
         }
@@ -131,26 +147,55 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
     });
 
     const saveInterval = setInterval(() => {
-      if (player && !player.paused()) {
-        updateTimestamp();
-      }
+      if (player && !player.paused()) updateTimestamp();
     }, 10000);
 
-    const updateOn = ["play", "pause", "seeked"];
-    updateOn.forEach((action) => {
-      player.on(action, () => {
-        updateTimestamp();
-      });
-    });
+    ["play", "pause", "seeked"].forEach((action) =>
+      player.on(action, updateTimestamp),
+    );
 
     document.addEventListener("keydown", handleKeyDown);
+
+    if (isTouch) {
+      let lastTap = 0;
+      const DOUBLE_TAP_DELAY = 300;
+
+      player.el().addEventListener("touchend", (e: TouchEvent) => {
+        const now = Date.now();
+        const delta = now - lastTap;
+        lastTap = now;
+
+        const touch = e.changedTouches[0];
+        const rect = videoRef!.getBoundingClientRect();
+        const x = touch.clientX - rect.left;
+        const third = rect.width / 3;
+
+        // Single tap or double tap: tell Video.js user is active so controls show
+        player.userActive(true);
+
+        if (delta < DOUBLE_TAP_DELAY) {
+          // Double tap → seek
+          if (x < third)
+            player.currentTime(Math.max(player.currentTime() - 10, 0));
+          else if (x > third * 2)
+            player.currentTime(
+              Math.min(player.currentTime() + 10, player.duration()),
+            );
+        } else {
+          // Single tap → toggle play/pause
+          if (player.paused()) player.play();
+          else player.pause();
+
+          // Ensure controls show after play/pause
+          player.userActive(true);
+        }
+      });
+    }
 
     onCleanup(() => {
       document.removeEventListener("keydown", handleKeyDown);
       clearInterval(saveInterval);
-      if (player) {
-        player.dispose();
-      }
+      if (player) player.dispose();
     });
   });
 
@@ -159,9 +204,7 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
       const ts = timestamp?.();
       if (ts && !isNaN(ts) && ts > 0) {
         const currentTime = player.currentTime();
-        if (Math.abs(currentTime - ts) > 5) {
-          player.currentTime(ts);
-        }
+        if (Math.abs(currentTime - ts) > 5) player.currentTime(ts);
       }
     }
   });
@@ -171,6 +214,7 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
       ref={(el) => (videoRef = el)}
       poster={poster}
       class="video-js vjs-fluid vjs-theme-city"
+      tabIndex={0}
     >
       <For each={urls()}>
         {(url) => (

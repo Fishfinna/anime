@@ -49,6 +49,10 @@
 
     video {
         border-radius: 0;
+
+        @media (max-width: 900px) {
+            object-fit: contain !important;
+        }
     }
 }
 
@@ -236,5 +240,28 @@
 
     .vjs-theme-city .vjs-current-time {
         flex: 1;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .video-js.vjs-user-active .vjs-control-bar {
+        opacity: 1 !important;
+        pointer-events: auto;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .vjs-theme-city .vjs-progress-control {
+        height: 40px;
+        bottom: 20px;
+    }
+
+    .vjs-theme-city .vjs-progress-control .vjs-progress-holder {
+        height: 10px;
+        top: 14px;
+    }
+
+    .vjs-theme-city .vjs-play-progress {
+        height: 100%;
     }
 }
