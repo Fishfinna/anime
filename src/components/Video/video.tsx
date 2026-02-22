@@ -104,7 +104,7 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
       preload: "auto",
       fluid: true,
       aspectRatio: "16:9",
-      inactivityTimeout: isTouch ? 2000 : 0,
+      inactivityTimeout: 0,
       controlBar: {
         volumePanel: !isTouch,
         pictureInPictureToggle: !isTouch,
@@ -156,6 +156,37 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
 
     document.addEventListener("keydown", handleKeyDown);
 
+    if (!isTouch) {
+      let mouseInactivityTimer: number | undefined;
+      const MOUSE_INACTIVITY_DELAY = 5000;
+
+      const handleMouseMove = () => {
+        if (!player) return;
+
+        player.userActive(true);
+
+        if (mouseInactivityTimer) {
+          clearTimeout(mouseInactivityTimer);
+        }
+
+        mouseInactivityTimer = window.setTimeout(() => {
+          if (!player.paused()) {
+            player.userActive(false);
+          }
+        }, MOUSE_INACTIVITY_DELAY);
+      };
+
+      const el = player.el();
+      el.addEventListener("mousemove", handleMouseMove);
+
+      player.userActive(false);
+
+      onCleanup(() => {
+        el.removeEventListener("mousemove", handleMouseMove);
+        if (mouseInactivityTimer) clearTimeout(mouseInactivityTimer);
+      });
+    }
+
     if (isTouch) {
       let lastTap = 0;
       const DOUBLE_TAP_DELAY = 300;
@@ -170,11 +201,9 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
         const x = touch.clientX - rect.left;
         const third = rect.width / 3;
 
-        // Single tap or double tap: tell Video.js user is active so controls show
         player.userActive(true);
 
         if (delta < DOUBLE_TAP_DELAY) {
-          // Double tap → seek
           if (x < third)
             player.currentTime(Math.max(player.currentTime() - 10, 0));
           else if (x > third * 2)
@@ -182,11 +211,9 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
               Math.min(player.currentTime() + 10, player.duration()),
             );
         } else {
-          // Single tap → toggle play/pause
           if (player.paused()) player.play();
           else player.pause();
 
-          // Ensure controls show after play/pause
           player.userActive(true);
         }
       });
