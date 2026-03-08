@@ -189,33 +189,56 @@ export function Video({ poster, urls, timestamp, setTimestamp }: VideoProps) {
 
     if (isTouch) {
       let lastTap = 0;
+      let tapTimer: number | undefined;
       const DOUBLE_TAP_DELAY = 300;
 
-      player.el().addEventListener("touchend", (e: TouchEvent) => {
-        const now = Date.now();
-        const delta = now - lastTap;
-        lastTap = now;
+      player.el().addEventListener(
+        "touchend",
+        (e: TouchEvent) => {
+          const controlBar = player.getChild("controlBar")?.el();
+          if (controlBar?.contains(e.target as Node)) return;
 
-        const touch = e.changedTouches[0];
-        const rect = videoRef!.getBoundingClientRect();
-        const x = touch.clientX - rect.left;
-        const third = rect.width / 3;
+          const now = Date.now();
+          const delta = now - lastTap;
+          lastTap = now;
 
-        player.userActive(true);
+          const touch = e.changedTouches[0];
+          const rect = (player.el() as HTMLElement).getBoundingClientRect();
+          const x = touch.clientX - rect.left;
+          const third = rect.width / 3;
 
-        if (delta < DOUBLE_TAP_DELAY) {
-          if (x < third)
-            player.currentTime(Math.max(player.currentTime() - 10, 0));
-          else if (x > third * 2)
-            player.currentTime(
-              Math.min(player.currentTime() + 10, player.duration()),
-            );
-        } else {
-          if (player.paused()) player.play();
-          else player.pause();
+          if (tapTimer) {
+            clearTimeout(tapTimer);
+            tapTimer = undefined;
+          }
 
-          player.userActive(true);
-        }
+          if (delta < DOUBLE_TAP_DELAY) {
+            e.preventDefault();
+            if (x < third) {
+              player.currentTime(Math.max(player.currentTime() - 10, 0));
+            } else if (x > third * 2) {
+              player.currentTime(
+                Math.min(player.currentTime() + 10, player.duration()),
+              );
+            }
+            player.userActive(true);
+          } else {
+            tapTimer = window.setTimeout(() => {
+              if (player.userActive()) {
+                player.paused() ? player.play() : player.pause();
+              }
+              player.userActive(true);
+              tapTimer = undefined;
+            }, DOUBLE_TAP_DELAY);
+
+            player.userActive(true);
+          }
+        },
+        { passive: false },
+      );
+
+      onCleanup(() => {
+        if (tapTimer) clearTimeout(tapTimer);
       });
     }
 
