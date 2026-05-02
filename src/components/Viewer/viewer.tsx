@@ -10,7 +10,7 @@ import {
 import { Mode } from "../../types/settings";
 import { SettingsContext } from "../../context/settingsContext";
 import { Toggle } from "../Toggle/toggle";
-import { EpisodeVariables, client, episodeQuery } from "../../api";
+import { EpisodeVariables, client, fetchEpisodeUrls } from "../../api";
 import "./viewer.scss";
 import { convertUrlsToProperLinks } from "../../api/decodeUrl";
 import { Video } from "../Video/video";
@@ -41,14 +41,13 @@ export function Viewer(param: { showId?: string }) {
   const dateOffset = 1000;
 
   async function getUrls(episodeVariables: EpisodeVariables) {
-    const { query, variables } = episodeQuery(episodeVariables);
-    const { data } = await client.query(query, variables).toPromise();
-    if (!data.episode?.sourceUrls) {
+    const sourceUrls = await fetchEpisodeUrls(episodeVariables);
+    if (!sourceUrls?.length) {
       throw new Error(
-        isDub() ? `nothing here :( \ntry watching in sub` : "nothing here :(\n"
+        isDub() ? `nothing here :( \ntry watching in sub` : "nothing here :(\n",
       );
     }
-    return await convertUrlsToProperLinks(data.episode.sourceUrls);
+    return await convertUrlsToProperLinks(sourceUrls);
   }
 
   async function manageWatchLog() {
@@ -61,7 +60,7 @@ export function Viewer(param: { showId?: string }) {
       };
 
       const existingLogIndex = watchLog().findIndex(
-        (log) => log.title._id === currentTitle()?._id
+        (log) => log.title._id === currentTitle()?._id,
       );
       if (existingLogIndex !== -1) {
         const updatedWatchLog = [...watchLog()];
@@ -76,12 +75,11 @@ export function Viewer(param: { showId?: string }) {
     }
   }
 
-  // handle date modified
   createEffect(() => {
     setLang(isDub() ? "dub" : "sub");
 
     const modifiedDate = new Date(
-      currentTitle()!?.lastEpisodeTimestamp!?.[lang()] * dateOffset
+      currentTitle()!?.lastEpisodeTimestamp!?.[lang()] * dateOffset,
     );
 
     const formattedDate = modifiedDate.toLocaleString("en-US", {
@@ -101,13 +99,13 @@ export function Viewer(param: { showId?: string }) {
   createEffect(async () => {
     // handle the episode numbers
     const episodes = currentTitle()!?.availableEpisodesDetail[lang()].sort(
-      (a: any, b: any) => a - b
+      (a: any, b: any) => a - b,
     );
     if (!episodeNumber() && episodes) {
       setEpisodeNumber(
         currentTitle()!?.availableEpisodesDetail[lang()].sort(
-          (a: any, b: any) => a - b
-        )[0]
+          (a: any, b: any) => a - b,
+        )[0],
       );
     }
     if (episodes) {
@@ -136,10 +134,9 @@ export function Viewer(param: { showId?: string }) {
   createEffect(
     on([episodeNumber], () => {
       setTimestamp(0);
-    })
+    }),
   );
 
-  // reload the content when the page reloads
   onMount(async () => {
     setError(undefined);
     if (param.showId || currentTitle()?._id) {
@@ -166,7 +163,7 @@ export function Viewer(param: { showId?: string }) {
             showId: currentTitle()?._id || "",
             episodeString: episodeNumber() || "1",
             translationType: lang(),
-          })
+          }),
         );
       } catch (err: any) {
         setError(err.message);
@@ -187,8 +184,8 @@ export function Viewer(param: { showId?: string }) {
       },
       {
         defer: true,
-      }
-    )
+      },
+    ),
   );
 
   return (
@@ -221,7 +218,7 @@ export function Viewer(param: { showId?: string }) {
             >
               <For
                 each={currentTitle()?.availableEpisodesDetail[lang()].sort(
-                  (a: any, b: any) => a - b
+                  (a: any, b: any) => a - b,
                 )}
               >
                 {(episode) => (
