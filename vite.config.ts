@@ -38,6 +38,28 @@ export default defineConfig({
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0",
         },
       },
+      "/wixmp": {
+        target: "https://repackager.wixmp.com",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/wixmp/, ""),
+        headers: {
+          Referer: "https://allmanga.to",
+          Origin: "https://allmanga.to",
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0",
+        },
+      },
+      "/wixstatic": {
+        target: "https://video.wixstatic.com",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/wixstatic/, ""),
+        headers: {
+          Referer: "https://allmanga.to",
+          Origin: "https://allmanga.to",
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0",
+        },
+      },
     },
   },
 });

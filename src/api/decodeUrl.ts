@@ -101,106 +101,165 @@ function decode(encoding: string): string {
     .replace(/\/clock/g, "/clock.json");
 }
 
-async function extractMp4FromEpisodeLink(episodeLink: string): Promise<url[]> {
-  const mp4Links: url[] = [];
+// mirrors ani-cli get_links() for wixmp/repackager URLs
+async function handleWixmp(episodeLink: string): Promise<url[]> {
+  // extract the video ID and resolutions from the urlset format
+  // e.g. repackager.wixmp.com/video.wixstatic.com/video/ID/,1080p,720p,480p,/mp4/file.mp4
+  const idMatch = episodeLink.match(/video\/([^/]+)\/,([^/]+),\/mp4/);
+  if (!idMatch) return [];
 
-  try {
-    if (episodeLink.includes("repackager.wixmp.com")) {
-      const cleanLink = episodeLink.replace(
-        /^https?:\/\/repackager\.wixmp\.com\/https?:\/\/repackager\.wixmp\.com\//,
-        "https://repackager.wixmp.com/",
-      );
-      const extractLink = cleanLink.replace(/\.urlset.*/, "");
-      try {
-        const { data } = await axios.get(extractLink);
-        const lines = data.split("\n");
-        lines.forEach((line: string) => {
-          if (line.includes(".mp4")) {
-            mp4Links.push({ link: line.trim(), resolution: "unknown" });
-          }
-        });
-      } catch (error) {}
-      return mp4Links;
-    }
+  const videoId = idMatch[1];
+  const resolutions = idMatch[2].split(",").filter(Boolean);
 
-    if (
-      episodeLink.includes("vipanicdn") ||
-      episodeLink.includes("anifastcdn")
-    ) {
-      if (episodeLink.includes("original.m3u")) {
-        mp4Links.push({ link: episodeLink, resolution: "unknown" });
-      } else {
-        const relativeLink = episodeLink.replace(/[^/]+$/, "");
-        try {
-          const { data } = await axios.get(episodeLink);
-          const lines = data
-            .split("\n")
-            .filter((line: string) => !line.startsWith("#"))
-            .map((line: string) => line.trim())
-            .filter((line: string) => line)
-            .sort((a: string, b: string) => b.localeCompare(a));
-          for (const line of lines) {
-            mp4Links.push({ link: `${relativeLink}${line}`, resolution: "" });
-          }
-        } catch (error) {}
-      }
-    }
-
-    if (
-      episodeLink.trim() &&
-      !episodeLink.includes("workfields.maverickki.lol")
-    ) {
-      mp4Links.push({ link: episodeLink, resolution: "unknown" });
-    }
-  } catch (error) {}
-
-  return mp4Links;
+  return resolutions.map((res) => {
+    const fullUrl = `https://video.wixstatic.com/video/${videoId}/${res}/mp4/file.mp4`;
+    const link = import.meta.env.DEV
+      ? `/wixstatic/video/${videoId}/${res}/mp4/file.mp4`
+      : fullUrl;
+    return { link, resolution: res };
+  });
 }
 
+// mirrors ani-cli get_links() for m3u8 URLs
+async function handleM3u8(
+  episodeLink: string,
+  referer?: string,
+): Promise<url[]> {
+  const results: url[] = [];
+  try {
+    const headers: Record<string, string> = {};
+    if (referer) headers["Referer"] = referer;
+
+    const { data } = await axios.get(episodeLink, { headers });
+
+    if (!data.includes("#EXTM3U"))
+      return [{ link: episodeLink, resolution: "unknown" }];
+
+    const lines = data.split("\n");
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      if (line.startsWith("#EXT-X-STREAM-INF")) {
+        // extract resolution
+        const resMatch = line.match(/RESOLUTION=\d+x(\d+)/);
+        const res = resMatch ? `${resMatch[1]}p` : "unknown";
+        const urlLine = lines[i + 1]?.trim();
+        if (urlLine && !urlLine.startsWith("#")) {
+          const baseUrl = episodeLink.replace(/[^/]+$/, "");
+          const fullUrl = urlLine.startsWith("http")
+            ? urlLine
+            : `${baseUrl}${urlLine}`;
+          results.push({ link: fullUrl, resolution: res });
+        }
+      }
+    }
+  } catch (err) {
+    // if we can't fetch m3u8, just pass the URL directly
+    results.push({ link: episodeLink, resolution: "unknown" });
+  }
+
+  return results.length
+    ? results
+    : [{ link: episodeLink, resolution: "unknown" }];
+}
+
+// mirrors ani-cli get_links() for vipanicdn/anifastcdn
+async function handleVipani(episodeLink: string): Promise<url[]> {
+  if (episodeLink.includes("original.m3u")) {
+    return [{ link: episodeLink, resolution: "unknown" }];
+  }
+
+  const relativeLink = episodeLink.replace(/[^/]+$/, "");
+  try {
+    const { data } = await axios.get(episodeLink);
+    const lines = data
+      .split("\n")
+      .filter((l: string) => !l.startsWith("#"))
+      .map((l: string) => l.trim())
+      .filter((l: string) => l)
+      .sort((a: string, b: string) => b.localeCompare(a));
+
+    return lines.map((line: string) => ({
+      link: `${relativeLink}${line}`,
+      resolution: "",
+    }));
+  } catch {
+    return [{ link: episodeLink, resolution: "unknown" }];
+  }
+}
+
+// mirrors ani-cli get_links() - processes a single video link
+async function processEpisodeLink(
+  link: string,
+  referer?: string,
+): Promise<url[]> {
+  if (link.includes("repackager.wixmp.com")) {
+    return handleWixmp(link);
+  }
+  if (link.includes("vipanicdn") || link.includes("anifastcdn")) {
+    return handleVipani(link);
+  }
+  if (link.includes("master.m3u8") || link.endsWith(".m3u8")) {
+    return handleM3u8(link, referer);
+  }
+  if (link.includes("workfields.maverickki.lol")) {
+    return [];
+  }
+  return [{ link, resolution: "unknown" }];
+}
+
+const PROXY = "https://heavy-eel-56.fishfinna.deno.net";
+
+// mirrors ani-cli generate_link() + get_links()
 async function resolveSourceUrl(sourceUrl: string): Promise<url[]> {
   if (sourceUrl.startsWith("--")) {
     sourceUrl = sourceUrl.substring(2);
     sourceUrl = decode(sourceUrl);
   }
 
-  // clock.json endpoints 500 from browser, skip them
-  if (sourceUrl.includes("clock.json")) return [];
+  console.log("resolving:", sourceUrl);
 
-  // fast4speed URLs are direct video links, pass straight to player
+  // fast4speed - ani-cli passes these directly to mpv with allanime referer
   if (sourceUrl.includes("tools.fast4speed.rsvp")) {
-    const proxiedUrl = import.meta.env.DEV
+    const fetchUrl = import.meta.env.DEV
       ? sourceUrl.replace("https://tools.fast4speed.rsvp", "/fast4speed")
-      : sourceUrl;
-    return [{ link: proxiedUrl, resolution: "unknown" }];
+      : `${PROXY}?url=${encodeURIComponent(sourceUrl)}`;
+    return [{ link: fetchUrl, resolution: "unknown" }];
   }
 
-  // relative paths go through the allanime proxy
   if (!sourceUrl.startsWith("/")) return [];
 
+  // fetch from allanime CDN - mirrors ani-cli's curl call with allanime_refr
   const proxyUrl = import.meta.env.DEV
     ? `/allanime${sourceUrl}`
-    : `https://allanime.day${sourceUrl}`;
+    : `${PROXY}?url=${encodeURIComponent(`https://allanime.day${sourceUrl}`)}`;
 
   try {
     const { data } = await axios.get(proxyUrl, {
       headers: { "Content-Type": "application/json" },
     });
 
-    const links: url[] = data.links
-      .sort((a: Link, b: Link) => a.priority - b.priority)
-      .map(
-        ({ link, resolutionStr }: { link: string; resolutionStr: string }) => ({
-          link,
-          resolution: resolutionStr,
-        }),
-      );
+    console.log("allanime response:", JSON.stringify(data));
 
-    let results: url[] = [];
-    for (const { link } of links) {
-      results = results.concat(await extractMp4FromEpisodeLink(link));
+    if (!data?.links?.length) return [];
+
+    // filter out links with no URL - mirrors ani-cli skipping empty providers
+    const validLinks = data.links.filter((l: Link) => l.link && l.link.trim());
+    if (!validLinks.length) {
+      console.log("no valid links in response");
+      return [];
+    }
+
+    // get referer if present in response (for m3u8 streams)
+    const referer = data.links.find((l: Link) => l.src)?.src;
+
+    const results: url[] = [];
+    for (const { link } of validLinks) {
+      const processed = await processEpisodeLink(link, referer);
+      results.push(...processed);
     }
     return results;
-  } catch (error) {
+  } catch (error: any) {
+    console.log("allanime fetch error:", error.message);
     return [];
   }
 }
@@ -219,13 +278,16 @@ export async function convertUrlsToProperLinks(
     }
   }
 
-  return results.filter(Boolean).sort((a: url, b: url) => {
+  const final = results.filter(Boolean).sort((a: url, b: url) => {
     const aIsM3u8 = a?.link.endsWith("m3u8");
     const bIsM3u8 = b?.link.endsWith("m3u8");
     if (aIsM3u8 && !bIsM3u8) return -1;
     if (!aIsM3u8 && bIsM3u8) return 1;
     return 0;
   });
+
+  console.log("Final URLs going to player:", final);
+  return final;
 }
 
 const ALLANIME_KEY = "Xot36i3lK3:v1";
@@ -247,30 +309,24 @@ export async function decodeTobeparsed(
   tobeparsed: string,
 ): Promise<SourceUrl[]> {
   const binary = Uint8Array.from(atob(tobeparsed), (c) => c.charCodeAt(0));
-
   const ivBytes = binary.slice(1, 13);
   const ivHex = Array.from(ivBytes)
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
-
   const counterHex = ivHex + "00000002";
   const counterBlock = new Uint8Array(16);
   for (let i = 0; i < 16; i++) {
     counterBlock[i] = parseInt(counterHex.slice(i * 2, i * 2 + 2), 16);
   }
-
   const ctLen = binary.length - 13 - 16;
   const ciphertext = binary.slice(13, 13 + ctLen);
-
   const key = await getAllanimeKey();
   const decrypted = await crypto.subtle.decrypt(
     { name: "AES-CTR", counter: counterBlock, length: 64 },
     key,
     ciphertext,
   );
-
   const plain = new TextDecoder().decode(decrypted);
-
   return plain.split(/[{}]/).flatMap((chunk) => {
     const urlMatch = chunk.match(/"sourceUrl":"--([^"]+)"/);
     const nameMatch = chunk.match(/"sourceName":"([^"]+)"/);
